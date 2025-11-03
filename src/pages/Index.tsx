@@ -5,16 +5,13 @@ import { ContentGenerator } from "@/components/ContentGenerator";
 import { BrandSettings } from "@/components/BrandSettings";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Sparkles, Zap, Target, Instagram, Facebook, X } from "lucide-react";
+import { Sparkles, Zap, Target } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { UserProfileMenu } from "@/components/UserProfileMenu";
 import { NotificationBell } from "@/components/NotificationBell";
 import { CoinsDialog } from "@/components/CoinsDialog";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useTranslation } from "@/lib/i18n";
-import mascotCat from "@/assets/mascot-cat-new.png";
-import threadsLogo from "@/assets/threads-logo.png";
-import xiaohongshuLogo from "@/assets/xiaohongshu-logo.png";
 
 const Index = () => {
   const [user, setUser] = useState(null);
@@ -78,29 +75,29 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-purple-100/80 via-pink-50/60 to-blue-100/70 dark:from-purple-900/30 dark:via-pink-900/20 dark:to-blue-900/30" style={{ background: 'linear-gradient(135deg, hsl(280, 80%, 92%), hsl(320, 70%, 94%), hsl(240, 90%, 94%), hsl(200, 85%, 95%))' }}>
-        {/* Animated AI Robots Background */}
-        <div className="absolute inset-0 overflow-hidden opacity-30">
-          <div className="absolute top-10 left-10 w-16 h-16 text-primary/40 animate-[spin_20s_linear_infinite]">
-            <Sparkles className="w-full h-full" />
-          </div>
-          <div className="absolute top-32 right-20 w-12 h-12 text-secondary/40 animate-[spin_15s_linear_infinite_reverse]">
-            <Zap className="w-full h-full" />
-          </div>
-          <div className="absolute bottom-20 left-1/4 w-20 h-20 text-primary/30 animate-[bounce_3s_ease-in-out_infinite]">
-            <Target className="w-full h-full" />
-          </div>
-          <div className="absolute top-1/2 right-1/3 w-14 h-14 text-secondary/30 animate-[spin_25s_linear_infinite]">
-            <Sparkles className="w-full h-full" />
-          </div>
+      <div className="relative overflow-hidden" style={{ background: 'linear-gradient(135deg, hsl(280, 80%, 92%), hsl(320, 70%, 94%), hsl(240, 90%, 94%), hsl(200, 85%, 95%))' }}>
+        {/* Floating decoration elements */}
+        <div className="absolute inset-0 overflow-hidden opacity-20">
+          <div className="absolute top-20 left-10 w-64 h-64 bg-gradient-to-br from-purple-400 to-blue-400 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute top-40 right-20 w-96 h-96 bg-gradient-to-br from-pink-300 to-purple-300 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+          <div className="absolute bottom-20 left-1/3 w-80 h-80 bg-gradient-to-br from-blue-300 to-purple-400 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+        </div>
+        
+        {/* Subtle animated particles */}
+        <div className="absolute inset-0 overflow-hidden opacity-40">
+          <div className="absolute top-32 left-1/4 w-2 h-2 bg-purple-500 rounded-full animate-ping"></div>
+          <div className="absolute top-48 right-1/3 w-2 h-2 bg-blue-500 rounded-full animate-ping" style={{ animationDelay: '0.5s' }}></div>
+          <div className="absolute bottom-32 left-1/2 w-2 h-2 bg-pink-500 rounded-full animate-ping" style={{ animationDelay: '1s' }}></div>
         </div>
         
         {/* Navigation */}
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
             <div className="flex items-center gap-2">
-              <Sparkles className="h-8 w-8 text-primary" />
-              <span className="text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+              <div className="p-2 bg-white/30 backdrop-blur-sm rounded-xl border border-white/20">
+                <Sparkles className="h-6 w-6 text-purple-600" />
+              </div>
+              <span className="text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
                 {t('platformName')}
               </span>
             </div>
@@ -112,7 +109,7 @@ const Index = () => {
                   <UserProfileMenu user={user} profile={profile} onSignOut={handleSignOut} />
                 </>
               ) : (
-                <Button variant="default" onClick={() => navigate("/auth")}>
+                <Button variant="default" onClick={() => navigate("/auth")} className="shadow-lg">
                   {t('login')}
                 </Button>
               )}
@@ -124,66 +121,86 @@ const Index = () => {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 pt-10">
           <div className="text-center mb-16">
             {/* Top Tag */}
-            <div className="inline-block mb-6 animate-fade-in">
-              <div className="px-6 py-2 rounded-full bg-gradient-to-r from-purple-100 to-blue-100 dark:from-purple-900/30 dark:to-blue-900/30 border border-primary/20">
+            <div className="inline-block mb-8 animate-fade-in">
+              <div className="px-6 py-3 rounded-full bg-white/40 backdrop-blur-md border border-white/30 shadow-lg">
                 <span className="text-sm font-semibold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
                   {t('aiPlatformTag')}
                 </span>
               </div>
             </div>
             
-            {/* Main Title with Mascot */}
-            <div className="flex items-center justify-center gap-4 mb-6 animate-fade-in" style={{ animationDelay: '0.1s' }}>
-              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold">
-                <span className="bg-gradient-to-r from-purple-600 via-blue-600 to-purple-600 bg-clip-text text-transparent">
-                  {t('heroMainTitle')}
-                </span>
-              </h1>
-              
-              {/* Mascot next to title */}
-              <div className="w-32 h-32 pointer-events-none animate-bounce" style={{ animationDuration: '3s' }}>
-                <img 
-                  src={mascotCat} 
-                  alt={t('mascotName')} 
-                  className="w-full h-full object-contain drop-shadow-2xl"
-                />
-              </div>
-            </div>
+            {/* Main Title */}
+            <h1 className="text-6xl sm:text-7xl lg:text-8xl font-bold mb-8 animate-fade-in tracking-tight" style={{ animationDelay: '0.1s' }}>
+              <span className="bg-gradient-to-r from-purple-600 via-blue-600 to-purple-600 bg-clip-text text-transparent">
+                {t('heroMainTitle')}
+              </span>
+            </h1>
             
-            {/* Subtitle */}
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-16 animate-fade-in" style={{ animationDelay: '0.2s' }}>
-              {t('heroSubtitle')}
-              <br />
-              <span className="font-semibold text-primary">30 分鐘 搞定30天內容引流</span>
-            </p>
+            {/* Subtitle with glass effect */}
+            <div className="max-w-3xl mx-auto mb-4 animate-fade-in" style={{ animationDelay: '0.2s' }}>
+              <p className="text-xl sm:text-2xl text-gray-700 mb-2">
+                {t('heroSubtitle')}
+              </p>
+              <p className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+                30 分鐘 搞定30天內容引流
+              </p>
+            </div>
 
-            {/* Feature Cards */}
-            <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto animate-fade-in" style={{ animationDelay: '0.3s' }}>
+            {/* CTA Buttons */}
+            <div className="flex gap-4 justify-center mb-20 animate-fade-in" style={{ animationDelay: '0.3s' }}>
+              <Button 
+                size="lg" 
+                className="text-lg px-8 py-6 shadow-xl hover:shadow-2xl transition-all hover:scale-105"
+                onClick={() => user ? null : navigate("/auth")}
+              >
+                <Sparkles className="w-5 h-5 mr-2" />
+                開始創作
+              </Button>
+              <Button 
+                size="lg" 
+                variant="outline"
+                className="text-lg px-8 py-6 bg-white/40 backdrop-blur-md border-white/30 hover:bg-white/60 shadow-xl transition-all hover:scale-105"
+              >
+                了解更多
+              </Button>
+            </div>
+
+            {/* Feature Cards with glass morphism */}
+            <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto animate-fade-in" style={{ animationDelay: '0.4s' }}>
               {/* Smart Generation */}
-              <div className="bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm rounded-2xl p-8 border border-primary/10 hover:border-primary/30 transition-all hover:shadow-lg">
-                <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center mx-auto mb-4">
-                  <Sparkles className="w-8 h-8 text-white" />
+              <div className="group relative bg-white/40 backdrop-blur-md rounded-3xl p-8 border border-white/30 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 hover:bg-white/50">
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div className="relative">
+                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:scale-110 transition-transform">
+                    <Sparkles className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-bold mb-3 text-gray-800">{t('smartGeneration')}</h3>
+                  <p className="text-gray-600 leading-relaxed">{t('smartGenerationDesc')}</p>
                 </div>
-                <h3 className="text-xl font-bold mb-2">{t('smartGeneration')}</h3>
-                <p className="text-sm text-muted-foreground">{t('smartGenerationDesc')}</p>
               </div>
 
               {/* Multi-Platform */}
-              <div className="bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm rounded-2xl p-8 border border-primary/10 hover:border-primary/30 transition-all hover:shadow-lg">
-                <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center mx-auto mb-4">
-                  <Zap className="w-8 h-8 text-white" />
+              <div className="group relative bg-white/40 backdrop-blur-md rounded-3xl p-8 border border-white/30 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 hover:bg-white/50">
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div className="relative">
+                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:scale-110 transition-transform">
+                    <Zap className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-bold mb-3 text-gray-800">{t('multiPlatform')}</h3>
+                  <p className="text-gray-600 leading-relaxed">{t('multiPlatformDesc')}</p>
                 </div>
-                <h3 className="text-xl font-bold mb-2">{t('multiPlatform')}</h3>
-                <p className="text-sm text-muted-foreground">{t('multiPlatformDesc')}</p>
               </div>
 
               {/* Precise Framework */}
-              <div className="bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm rounded-2xl p-8 border border-primary/10 hover:border-primary/30 transition-all hover:shadow-lg">
-                <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center mx-auto mb-4">
-                  <Target className="w-8 h-8 text-white" />
+              <div className="group relative bg-white/40 backdrop-blur-md rounded-3xl p-8 border border-white/30 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 hover:bg-white/50">
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-pink-500/10 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div className="relative">
+                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500 via-pink-500 to-blue-500 flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:scale-110 transition-transform">
+                    <Target className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-bold mb-3 text-gray-800">{t('preciseFramework')}</h3>
+                  <p className="text-gray-600 leading-relaxed">{t('preciseFrameworkDesc')}</p>
                 </div>
-                <h3 className="text-xl font-bold mb-2">{t('preciseFramework')}</h3>
-                <p className="text-sm text-muted-foreground">{t('preciseFrameworkDesc')}</p>
               </div>
             </div>
           </div>
