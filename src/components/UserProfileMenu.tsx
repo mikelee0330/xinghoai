@@ -117,11 +117,20 @@ export const UserProfileMenu = ({ user, profile, onSignOut }: UserProfileMenuPro
             <span>{labels.language}</span>
             <span className="ml-auto text-xs text-muted-foreground">{currentLanguageLabel}</span>
           </DropdownMenuSubTrigger>
-          <DropdownMenuSubContent className="bg-background/95 backdrop-blur-sm border-border">
+          <DropdownMenuSubContent className="bg-background/95 backdrop-blur-sm border-border" sideOffset={8}>
             {languages.map((lang) => (
               <DropdownMenuItem
                 key={lang.code}
-                onClick={() => setLanguage(lang.code)}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  console.log('Language selected:', lang.code);
+                  setLanguage(lang.code);
+                  toast({
+                    title: language === 'English' ? 'Language Changed' : language === '日本語' ? '言語を変更しました' : language === '简体中文' ? '语言已更改' : '語言已更改',
+                    description: lang.label,
+                  });
+                }}
                 className="cursor-pointer"
               >
                 <Check className={`mr-2 h-4 w-4 ${language === lang.code ? 'opacity-100' : 'opacity-0'}`} />
