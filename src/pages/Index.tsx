@@ -132,12 +132,23 @@ const Index = () => {
               </div>
             </div>
             
-            {/* Main Title */}
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-6 animate-fade-in" style={{ animationDelay: '0.1s' }}>
-              <span className="bg-gradient-to-r from-purple-600 via-blue-600 to-purple-600 bg-clip-text text-transparent">
-                {t('heroMainTitle')}
-              </span>
-            </h1>
+            {/* Main Title with Mascot */}
+            <div className="flex items-center justify-center gap-4 mb-6 animate-fade-in" style={{ animationDelay: '0.1s' }}>
+              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold">
+                <span className="bg-gradient-to-r from-purple-600 via-blue-600 to-purple-600 bg-clip-text text-transparent">
+                  {t('heroMainTitle')}
+                </span>
+              </h1>
+              
+              {/* Mascot next to title */}
+              <div className="w-32 h-32 pointer-events-none animate-bounce" style={{ animationDuration: '3s' }}>
+                <img 
+                  src={mascotCat} 
+                  alt={t('mascotName')} 
+                  className="w-full h-full object-contain drop-shadow-2xl"
+                />
+              </div>
+            </div>
             
             {/* Subtitle */}
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-16 animate-fade-in" style={{ animationDelay: '0.2s' }}>
@@ -175,15 +186,6 @@ const Index = () => {
                 <p className="text-sm text-muted-foreground">{t('preciseFrameworkDesc')}</p>
               </div>
             </div>
-          </div>
-
-          {/* Mascot positioned at right center */}
-          <div className="absolute top-1/2 right-8 -translate-y-1/2 w-48 h-48 pointer-events-none z-50 animate-bounce" style={{ animationDuration: '3s' }}>
-            <img 
-              src={mascotCat} 
-              alt={t('mascotName')} 
-              className="w-full h-full object-contain drop-shadow-2xl"
-            />
           </div>
         </div>
       </div>
