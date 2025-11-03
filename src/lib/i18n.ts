@@ -114,10 +114,10 @@ export const translations = {
     loading: '載入中...',
     
     // Hero Section
-    aiPlatformTag: '🌍 全球首款AI 驅動內容創作平台',
+    aiPlatformTag: '✨ AI 驅動的內容創作平台',
     platformName: '星火AI新媒體',
-    heroMainTitle: '30 分鐘搞定 30 天內容引流',
-    heroSubtitle: '自動獲客，從吸睛內容開始！讓AI幫你自動寫好貼文，持續為你帶來更多潛在客戶。透過 AI 智能生成，讓您的品牌在社群媒體上脫穎而出。',
+    heroMainTitle: '星火 AI 內容平台',
+    heroSubtitle: '一鍵生成專業社群內容，讓創作變得更簡單',
     featureTag1: '⚡ 智能生成',
     featureTag2: '🎯 精準框架',
     featureTag3: '📈 數據驅動',
@@ -247,10 +247,10 @@ export const translations = {
     loading: '载入中...',
     
     // Hero Section
-    aiPlatformTag: '🌍 全球首款AI 驱动内容创作平台',
+    aiPlatformTag: '✨ AI 驱动的内容创作平台',
     platformName: '星火AI新媒体',
-    heroMainTitle: '30 分钟搞定 30 天内容引流',
-    heroSubtitle: '自动获客，从吸睛内容开始！让AI帮你自动写好贴文，持续为你带来更多潜在客户。通过 AI 智能生成，让您的品牌在社群媒体上脱颖而出。',
+    heroMainTitle: '星火 AI 内容平台',
+    heroSubtitle: '一键生成专业社群内容，让创作变得更简单',
     featureTag1: '⚡ 智能生成',
     featureTag2: '🎯 精准框架',
     featureTag3: '📈 数据驱动',
@@ -380,10 +380,10 @@ export const translations = {
     loading: 'Loading...',
     
     // Hero Section
-    aiPlatformTag: '🌍 World\'s First AI-Powered Content Creation Platform',
+    aiPlatformTag: '✨ AI-Powered Content Creation Platform',
     platformName: 'SparkFire AI Media',
-    heroMainTitle: 'Create 30 Days of Content in 30 Minutes',
-    heroSubtitle: 'Automatic customer acquisition starts with eye-catching content! Let AI automatically write posts for you and continuously bring more potential customers. Make your brand stand out on social media.',
+    heroMainTitle: 'SparkFire AI Content Platform',
+    heroSubtitle: 'Generate professional social content with one click, making content creation easier',
     featureTag1: '⚡ Smart Generation',
     featureTag2: '🎯 Precise Framework',
     featureTag3: '📈 Data-Driven',
@@ -513,10 +513,10 @@ export const translations = {
     loading: '読み込み中...',
     
     // Hero Section
-    aiPlatformTag: '🌍 世界初のAI駆動コンテンツ制作プラットフォーム',
+    aiPlatformTag: '✨ AI駆動のコンテンツ制作プラットフォーム',
     platformName: 'スパークファイアAIメディア',
-    heroMainTitle: '30分で30日分のコンテンツを作成',
-    heroSubtitle: '自動集客は魅力的なコンテンツから始まります！AIが自動的に投稿を作成し、継続的により多くの潜在顧客を引き付けます。AIスマート生成により、ソーシャルメディアでブランドを際立たせます。',
+    heroMainTitle: 'スパークファイア AI コンテンツプラットフォーム',
+    heroSubtitle: 'ワンクリックでプロフェッショナルなソーシャルコンテンツを生成し、コンテンツ制作をより簡単に',
     featureTag1: '⚡ スマート生成',
     featureTag2: '🎯 精密フレームワーク',
     featureTag3: '📈 データ駆動',

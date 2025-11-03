@@ -122,7 +122,7 @@ const Index = () => {
 
         {/* Hero Content */}
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 pt-10">
-          <div className="text-center mb-12">
+          <div className="text-center mb-16">
             {/* Top Tag */}
             <div className="inline-block mb-6 animate-fade-in">
               <div className="px-6 py-2 rounded-full bg-gradient-to-r from-purple-100 to-blue-100 dark:from-purple-900/30 dark:to-blue-900/30 border border-primary/20">
@@ -132,61 +132,51 @@ const Index = () => {
               </div>
             </div>
             
-            {/* Main Title with Icon */}
-            <div className="mb-8 animate-fade-in" style={{ animationDelay: '0.1s' }}>
-              <div className="flex items-center justify-center gap-4 mb-6">
-                <div className="text-6xl">⏱️</div>
-                <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold bg-gradient-to-r from-purple-600 via-blue-600 to-purple-600 bg-clip-text text-transparent leading-tight">
-                  {t('heroMainTitle')}
-                </h1>
-              </div>
-            </div>
-
-            {/* Feature Tags */}
-            <div className="flex flex-wrap items-center justify-center gap-3 mb-8 animate-fade-in" style={{ animationDelay: '0.2s' }}>
-              <div className="px-6 py-3 rounded-full bg-gradient-to-r from-purple-500 to-purple-600 text-white font-semibold shadow-lg hover:scale-105 transition-transform">
-                {t('featureTag1')}
-              </div>
-              <div className="px-6 py-3 rounded-full bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold shadow-lg hover:scale-105 transition-transform">
-                {t('featureTag2')}
-              </div>
-              <div className="px-6 py-3 rounded-full bg-gradient-to-r from-purple-500 to-blue-500 text-white font-semibold shadow-lg hover:scale-105 transition-transform">
-                {t('featureTag3')}
-              </div>
-            </div>
+            {/* Main Title */}
+            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-6 animate-fade-in" style={{ animationDelay: '0.1s' }}>
+              <span className="bg-gradient-to-r from-purple-600 via-blue-600 to-purple-600 bg-clip-text text-transparent">
+                {t('heroMainTitle')}
+              </span>
+            </h1>
             
             {/* Subtitle */}
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto mb-12 animate-fade-in leading-relaxed" style={{ animationDelay: '0.3s' }}>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-16 animate-fade-in" style={{ animationDelay: '0.2s' }}>
               {t('heroSubtitle')}
             </p>
 
-            {/* Social Platform Title */}
-            <h3 className="text-2xl font-bold mb-6 animate-fade-in" style={{ animationDelay: '0.4s' }}>
-              {t('keyFeatureTitle')}
-            </h3>
+            {/* Feature Cards */}
+            <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto animate-fade-in" style={{ animationDelay: '0.3s' }}>
+              {/* Smart Generation */}
+              <div className="bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm rounded-2xl p-8 border border-primary/10 hover:border-primary/30 transition-all hover:shadow-lg">
+                <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center mx-auto mb-4">
+                  <Sparkles className="w-8 h-8 text-white" />
+                </div>
+                <h3 className="text-xl font-bold mb-2">{t('smartGeneration')}</h3>
+                <p className="text-sm text-muted-foreground">{t('smartGenerationDesc')}</p>
+              </div>
 
-            {/* Social Platform Icons */}
-            <div className="flex justify-center items-center gap-6 mb-12 animate-fade-in" style={{ animationDelay: '0.5s' }}>
-              <div className="w-16 h-16 rounded-2xl bg-blue-600 flex items-center justify-center hover:scale-110 transition-transform shadow-lg">
-                <Facebook className="w-10 h-10 text-white" />
+              {/* Multi-Platform */}
+              <div className="bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm rounded-2xl p-8 border border-primary/10 hover:border-primary/30 transition-all hover:shadow-lg">
+                <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center mx-auto mb-4">
+                  <Zap className="w-8 h-8 text-white" />
+                </div>
+                <h3 className="text-xl font-bold mb-2">{t('multiPlatform')}</h3>
+                <p className="text-sm text-muted-foreground">{t('multiPlatformDesc')}</p>
               </div>
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-600 via-pink-600 to-orange-500 flex items-center justify-center hover:scale-110 transition-transform shadow-lg">
-                <Instagram className="w-10 h-10 text-white" />
-              </div>
-              <div className="w-16 h-16 rounded-2xl bg-black flex items-center justify-center hover:scale-110 transition-transform shadow-lg p-3">
-                <img src={threadsLogo} alt="Threads" className="w-full h-full object-contain" />
-              </div>
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-red-500 to-pink-500 flex items-center justify-center hover:scale-110 transition-transform shadow-lg p-3">
-                <img src={xiaohongshuLogo} alt="小紅書" className="w-full h-full object-contain" />
-              </div>
-              <div className="w-16 h-16 rounded-2xl bg-black flex items-center justify-center hover:scale-110 transition-transform shadow-lg">
-                <X className="w-10 h-10 text-white" />
+
+              {/* Precise Framework */}
+              <div className="bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm rounded-2xl p-8 border border-primary/10 hover:border-primary/30 transition-all hover:shadow-lg">
+                <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center mx-auto mb-4">
+                  <Target className="w-8 h-8 text-white" />
+                </div>
+                <h3 className="text-xl font-bold mb-2">{t('preciseFramework')}</h3>
+                <p className="text-sm text-muted-foreground">{t('preciseFrameworkDesc')}</p>
               </div>
             </div>
           </div>
 
-          {/* Mascot positioned at bottom right */}
-          <div className="absolute bottom-0 right-0 w-64 h-64 pointer-events-none z-50 animate-bounce" style={{ animationDuration: '3s' }}>
+          {/* Mascot positioned at bottom right - smaller size */}
+          <div className="absolute bottom-0 right-0 w-48 h-48 pointer-events-none z-50 animate-bounce" style={{ animationDuration: '3s' }}>
             <img 
               src={mascotCat} 
               alt={t('mascotName')} 
