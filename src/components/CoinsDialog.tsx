@@ -103,9 +103,21 @@ export const CoinsDialog = ({ userId }: CoinsDialogProps) => {
     if (!canCheckIn) return;
 
     try {
+      setLoading(true);
       const today = new Date().toISOString().split('T')[0];
       const nextDay = consecutiveDays + 1;
       const points = nextDay === 7 ? 12 : nextDay === 4 ? 3 : 2;
+
+      // First, get current balance
+      const { data: currentCoins, error: fetchError } = await supabase
+        .from('user_coins')
+        .select('balance')
+        .eq('user_id', userId)
+        .single();
+
+      if (fetchError) throw fetchError;
+
+      const newBalance = currentCoins.balance + points;
 
       // Insert check-in
       const { error: checkInError } = await supabase
@@ -119,10 +131,10 @@ export const CoinsDialog = ({ userId }: CoinsDialogProps) => {
 
       if (checkInError) throw checkInError;
 
-      // Update balance
+      // Update balance with new calculated value
       const { error: coinsError } = await supabase
         .from('user_coins')
-        .update({ balance: balance + points })
+        .update({ balance: newBalance })
         .eq('user_id', userId);
 
       if (coinsError) throw coinsError;
@@ -139,25 +151,28 @@ export const CoinsDialog = ({ userId }: CoinsDialogProps) => {
 
       toast({
         title: "打卡成功！",
-        description: `獲得 ${points} 積分`,
+        description: `獲得 ${points}P`,
       });
 
-      loadCoinsData();
+      // Reload data to reflect changes
+      await loadCoinsData();
     } catch (error: any) {
       toast({
         title: "打卡失敗",
         description: error.message,
         variant: "destructive"
       });
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="sm" className="gap-2">
+        <Button variant="ghost" size="sm" className="gap-1">
           <Coins className="h-5 w-5 text-yellow-500" />
-          <span className="font-semibold text-yellow-600">{balance}</span>
+          <span className="font-semibold text-yellow-600">{balance}P</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-md max-h-[80vh] bg-background/95 backdrop-blur-sm">
@@ -174,6 +189,7 @@ export const CoinsDialog = ({ userId }: CoinsDialogProps) => {
             <div className="flex items-center justify-center gap-2 mb-2">
               <Coins className="h-8 w-8 text-yellow-500" />
               <span className="text-4xl font-bold text-yellow-600">{balance}</span>
+              <span className="text-2xl font-bold text-yellow-600">P</span>
             </div>
             <p className="text-sm text-muted-foreground">目前可用積分</p>
           </div>
@@ -199,7 +215,7 @@ export const CoinsDialog = ({ userId }: CoinsDialogProps) => {
                   </div>
                   <div className="text-xs">第{day.day}天</div>
                   <div className={`text-xs font-semibold ${day.points > 2 ? 'text-orange-500' : 'text-muted-foreground'}`}>
-                    +{day.points}積分
+                    +{day.points}P
                   </div>
                 </div>
               ))}
@@ -240,7 +256,7 @@ export const CoinsDialog = ({ userId }: CoinsDialogProps) => {
                         </p>
                       </div>
                       <span className={`text-sm font-semibold ml-2 ${tx.amount > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                        {tx.amount > 0 ? '+' : ''}{tx.amount}
+                        {tx.amount > 0 ? '+' : ''}{tx.amount}P
                       </span>
                     </div>
                   ))}
