@@ -14,6 +14,7 @@ interface GenerationHistory {
   id: string;
   date: string;
   content: string;
+  title: string;
   platform: string;
   contentDirection: string;
   keywords: string;
@@ -62,19 +63,26 @@ export const ContentGenerator = () => {
     if (error) {
       console.error("Error loading history:", error);
     } else if (data) {
-      const formattedHistory: GenerationHistory[] = data.map(item => ({
-        id: item.id,
-        date: item.created_at,
-        content: item.generated_content,
-        platform: item.platform,
-        contentDirection: item.content_direction,
-        keywords: item.keywords,
-        textContent: "",
-        tone: item.tone,
-        framework: item.framework || "問題共鳴法",
-        contentType: item.content_type,
-        additionalRequirements: "",
-      }));
+      const formattedHistory: GenerationHistory[] = data.map(item => {
+        // Extract title from content (first line)
+        const contentLines = item.generated_content.split('\n').filter(line => line.trim());
+        const title = contentLines[0] || "未命名內容";
+        
+        return {
+          id: item.id,
+          date: item.created_at,
+          content: item.generated_content,
+          title: title,
+          platform: item.platform,
+          contentDirection: item.content_direction,
+          keywords: item.keywords,
+          textContent: "",
+          tone: item.tone,
+          framework: item.framework || "問題共鳴法",
+          contentType: item.content_type,
+          additionalRequirements: "",
+        };
+      });
       setHistory(formattedHistory);
     }
   };
@@ -544,12 +552,45 @@ export const ContentGenerator = () => {
           </div>
           
           {generatedContent ? (
-            <Textarea
-              value={generatedContent}
-              onChange={(e) => setGeneratedContent(e.target.value)}
-              className="min-h-[500px] bg-background/50 font-mono text-sm"
-              placeholder="生成的內容將顯示在這裡..."
-            />
+            <div className="space-y-4">
+              {(() => {
+                // Parse title and content
+                const lines = generatedContent.split('\n');
+                const title = lines[0] || "";
+                const content = lines.slice(1).join('\n').trim();
+                
+                return (
+                  <>
+                    {title && (
+                      <div className="space-y-2">
+                        <Label className="text-sm font-semibold text-muted-foreground">標題</Label>
+                        <Input
+                          value={title}
+                          onChange={(e) => {
+                            const newLines = generatedContent.split('\n');
+                            newLines[0] = e.target.value;
+                            setGeneratedContent(newLines.join('\n'));
+                          }}
+                          className="text-lg font-semibold bg-background/50"
+                        />
+                      </div>
+                    )}
+                    <div className="space-y-2">
+                      <Label className="text-sm font-semibold text-muted-foreground">內容</Label>
+                      <Textarea
+                        value={content}
+                        onChange={(e) => {
+                          const newLines = generatedContent.split('\n');
+                          setGeneratedContent(newLines[0] + '\n' + e.target.value);
+                        }}
+                        className="min-h-[420px] bg-background/50 text-sm whitespace-pre-wrap"
+                        placeholder="生成的內容將顯示在這裡..."
+                      />
+                    </div>
+                  </>
+                );
+              })()}
+            </div>
           ) : (
             <div className="min-h-[500px] bg-background/50 rounded-lg border-2 border-dashed border-border flex items-center justify-center text-muted-foreground">
               <div className="text-center space-y-2">
@@ -570,11 +611,11 @@ export const ContentGenerator = () => {
         {history.length > 0 ? (
           <div className="space-y-3">
             {history.map((item) => {
-              // Extract title from content (first line or keywords)
-              const contentLines = item.content.split('\n').filter(line => line.trim());
-              const title = contentLines[0] || item.keywords.split('\n')[0] || "未命名內容";
-              const summaryLength = 50;
-              const summary = item.content.substring(0, summaryLength) + (item.content.length > summaryLength ? "..." : "");
+              // Get content without title (skip first line)
+              const contentLines = item.content.split('\n');
+              const bodyContent = contentLines.slice(1).join('\n').trim();
+              const summaryLength = 80;
+              const summary = bodyContent.substring(0, summaryLength).replace(/\n/g, ' ') + (bodyContent.length > summaryLength ? "..." : "");
               
               return (
                 <div key={item.id} className="p-4 bg-background/50 rounded-lg border border-border flex items-center justify-between gap-4">
@@ -588,10 +629,18 @@ export const ContentGenerator = () => {
                         minute: '2-digit'
                       })}
                     </div>
-                    <div className="font-semibold text-sm mb-1">
-                      [{item.contentType}] {title}
+                    <div className="font-semibold text-base mb-2">
+                      {item.title}
                     </div>
-                    <div className="text-xs text-muted-foreground truncate">
+                    <div className="text-xs text-muted-foreground">
+                      <span className="inline-block px-2 py-0.5 bg-primary/10 rounded text-primary mr-2">
+                        {item.contentType}
+                      </span>
+                      <span className="inline-block px-2 py-0.5 bg-secondary/10 rounded text-secondary">
+                        {item.platform}
+                      </span>
+                    </div>
+                    <div className="text-sm text-muted-foreground mt-2 line-clamp-2">
                       {summary}
                     </div>
                   </div>
