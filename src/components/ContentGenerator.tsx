@@ -7,8 +7,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Sparkles, Loader2, Copy, Check, Trash2, Eye, Package, FileText, Video } from "lucide-react";
+import { Sparkles, Loader2, Copy, Check, Trash2, Eye, Package, FileText, Video, Instagram, Facebook, Twitter, Music } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 interface BrandSetting {
   id: string;
@@ -47,10 +48,38 @@ export const ContentGenerator = () => {
   const [platform, setPlatform] = useState("Instagram");
   const [tone, setTone] = useState("professional");
   const [framework, setFramework] = useState("問題共鳴法");
-  const [contentType, setContentType] = useState("post");
+  const [contentType, setContentType] = useState("貼文腳本");
   const [wordCount, setWordCount] = useState("300字內");
   const [videoLength, setVideoLength] = useState("50~75字(10~15s)");
   const [additionalRequirements, setAdditionalRequirements] = useState("");
+
+  // Platform icon mapping
+  const platformIcons: Record<string, React.ReactNode> = {
+    Instagram: <Instagram className="h-4 w-4" />,
+    Facebook: <Facebook className="h-4 w-4" />,
+    Threads: <span className="text-sm font-bold">@</span>,
+    "小紅書": <span className="text-sm font-bold">小</span>,
+    X: <Twitter className="h-4 w-4" />,
+    Tiktok: <Music className="h-4 w-4" />,
+  };
+
+  // Content type options per platform
+  const platformContentTypes: Record<string, string[]> = {
+    Instagram: ["貼文腳本", "腳本口播"],
+    Facebook: ["貼文腳本", "腳本口播"],
+    Threads: ["貼文腳本"],
+    "小紅書": ["貼文腳本", "腳本口播"],
+    X: ["貼文腳本", "腳本口播"],
+    Tiktok: ["貼文腳本", "腳本口播"],
+  };
+
+  // Update content type when platform changes
+  useEffect(() => {
+    const availableTypes = platformContentTypes[platform] || ["貼文腳本"];
+    if (!availableTypes.includes(contentType)) {
+      setContentType(availableTypes[0]);
+    }
+  }, [platform]);
   const [generatedContent, setGeneratedContent] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
@@ -233,7 +262,7 @@ export const ContentGenerator = () => {
         platform,
         content_direction: contentDirection,
         keywords,
-        content_type: contentType === "post" ? "貼文腳本" : "影片腳本",
+        content_type: contentType,
         tone,
         framework,
         generated_content: content,
@@ -334,9 +363,9 @@ export const ContentGenerator = () => {
           platform,
           tone,
           framework,
-          contentType: contentType === "post" ? "貼文腳本" : "影片腳本",
-          wordCount: contentType === "post" ? wordCount : undefined,
-          videoLength: contentType === "video" ? videoLength : undefined,
+          contentType: contentType,
+          wordCount: contentType === "貼文腳本" ? wordCount : undefined,
+          videoLength: contentType === "腳本口播" ? videoLength : undefined,
           additionalRequirements,
           brandInfo,
         },
@@ -404,13 +433,94 @@ export const ContentGenerator = () => {
                 <SelectTrigger id="platform" className="bg-background/50">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Instagram">Instagram</SelectItem>
-                  <SelectItem value="Facebook">Facebook</SelectItem>
-                  <SelectItem value="Threads">Threads</SelectItem>
+                <SelectContent className="bg-popover z-50">
+                  <SelectItem value="Instagram">
+                    <div className="flex items-center gap-2">
+                      {platformIcons.Instagram}
+                      Instagram
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="Facebook">
+                    <div className="flex items-center gap-2">
+                      {platformIcons.Facebook}
+                      Facebook
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="Threads">
+                    <div className="flex items-center gap-2">
+                      {platformIcons.Threads}
+                      Threads
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="小紅書">
+                    <div className="flex items-center gap-2">
+                      {platformIcons["小紅書"]}
+                      小紅書
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="X">
+                    <div className="flex items-center gap-2">
+                      {platformIcons.X}
+                      X
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="Tiktok">
+                    <div className="flex items-center gap-2">
+                      {platformIcons.Tiktok}
+                      Tiktok
+                    </div>
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
+
+            <div className="space-y-3">
+              <Label>內容類型</Label>
+              <RadioGroup value={contentType} onValueChange={setContentType}>
+                {platformContentTypes[platform]?.map((type) => (
+                  <div key={type} className="flex items-center space-x-2">
+                    <RadioGroupItem value={type} id={type} />
+                    <Label htmlFor={type} className="cursor-pointer font-normal flex items-center gap-2">
+                      {type === "貼文腳本" ? <FileText className="h-4 w-4" /> : <Video className="h-4 w-4" />}
+                      {type}
+                    </Label>
+                  </div>
+                ))}
+              </RadioGroup>
+            </div>
+
+            {contentType === "貼文腳本" && (
+              <div className="space-y-2">
+                <Label htmlFor="wordCount">字數</Label>
+                <Select value={wordCount} onValueChange={setWordCount}>
+                  <SelectTrigger id="wordCount" className="bg-background/50">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="bg-popover z-50">
+                    <SelectItem value="300字內">300字內</SelectItem>
+                    <SelectItem value="500-1500字">500-1500字</SelectItem>
+                    <SelectItem value="1500-2000字">1500-2000字</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
+
+            {contentType === "腳本口播" && (
+              <div className="space-y-2">
+                <Label htmlFor="videoLength">字數</Label>
+                <Select value={videoLength} onValueChange={setVideoLength}>
+                  <SelectTrigger id="videoLength" className="bg-background/50">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="bg-popover z-50">
+                    <SelectItem value="50~75字(10~15s)">50~75字(10~15s正常口播時長)</SelectItem>
+                    <SelectItem value="75~150字(15~30s)">75~150字(15~30s正常口播時長)</SelectItem>
+                    <SelectItem value="150~300字(30~60s)">150~300字(30~60s正常口播時長)</SelectItem>
+                    <SelectItem value="300~450字(≥60s)">300~450字(≥60s正常口播時長)</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
 
             <div className="space-y-2">
               <Label>內容方向</Label>
@@ -512,7 +622,7 @@ export const ContentGenerator = () => {
                 <SelectTrigger id="tone" className="bg-background/50">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-popover z-50">
                   <SelectItem value="professional">專業正式</SelectItem>
                   <SelectItem value="humorous">幽默風趣</SelectItem>
                   <SelectItem value="casual">輕鬆隨性</SelectItem>
@@ -520,52 +630,6 @@ export const ContentGenerator = () => {
                 </SelectContent>
               </Select>
             </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="contentType">內容類型</Label>
-              <Select value={contentType} onValueChange={setContentType}>
-                <SelectTrigger id="contentType" className="bg-background/50">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="post">貼文腳本</SelectItem>
-                  <SelectItem value="video">影片口播</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            {contentType === "post" && (
-              <div className="space-y-2">
-                <Label htmlFor="wordCount">字數</Label>
-                <Select value={wordCount} onValueChange={setWordCount}>
-                  <SelectTrigger id="wordCount" className="bg-background/50">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="300字內">300字內</SelectItem>
-                    <SelectItem value="500-1500字">500-1500字</SelectItem>
-                    <SelectItem value="1500-2000字">1500-2000字</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            )}
-
-            {contentType === "video" && (
-              <div className="space-y-2">
-                <Label htmlFor="videoLength">字數</Label>
-                <Select value={videoLength} onValueChange={setVideoLength}>
-                  <SelectTrigger id="videoLength" className="bg-background/50">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="50~75字(10~15s)">50~75字(10~15s正常口播時長)</SelectItem>
-                    <SelectItem value="75~150字(15~30s)">75~150字(15~30s正常口播時長)</SelectItem>
-                    <SelectItem value="150~300字(30~60s)">150~300字(30~60s正常口播時長)</SelectItem>
-                    <SelectItem value="300~450字(≥60s)">300~450字(≥60s正常口播時長)</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            )}
 
             <div className="space-y-2">
               <Label htmlFor="additionalRequirements">補充要求</Label>
