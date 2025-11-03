@@ -5,14 +5,14 @@ import { ContentGenerator } from "@/components/ContentGenerator";
 import { BrandSettings } from "@/components/BrandSettings";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Sparkles, Zap, Target } from "lucide-react";
+import { Sparkles, Zap, Target, Instagram, Facebook, Twitter } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { UserProfileMenu } from "@/components/UserProfileMenu";
 import { NotificationBell } from "@/components/NotificationBell";
 import { CoinsDialog } from "@/components/CoinsDialog";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useTranslation } from "@/lib/i18n";
-import mascotCat from "@/assets/mascot-cat.png";
+import duckMascot from "@/assets/duck-mascot.png";
 
 const Index = () => {
   const [user, setUser] = useState(null);
@@ -76,111 +76,116 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <div className="relative overflow-hidden">
-        {/* Animated Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-background to-secondary/20" />
-        <div className="absolute inset-0" style={{ 
-          backgroundImage: 'radial-gradient(circle at 20% 50%, hsl(263 70% 50% / 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 80%, hsl(217 91% 60% / 0.15) 0%, transparent 50%)',
-        }} />
-        
-        {/* Floating shapes animation */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-primary/5 rounded-full blur-3xl animate-[pulse_8s_ease-in-out_infinite]" />
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-secondary/5 rounded-full blur-3xl animate-[pulse_10s_ease-in-out_infinite]" style={{ animationDelay: '2s' }} />
-          <div className="absolute top-1/2 right-1/3 w-48 h-48 bg-primary/5 rounded-full blur-2xl animate-[pulse_6s_ease-in-out_infinite]" style={{ animationDelay: '4s' }} />
+      <div className="relative overflow-hidden bg-gradient-to-br from-purple-50 via-white to-blue-50 dark:from-purple-950/20 dark:via-background dark:to-blue-950/20">
+        {/* Animated AI Robots Background */}
+        <div className="absolute inset-0 overflow-hidden opacity-30">
+          <div className="absolute top-10 left-10 w-16 h-16 text-primary/40 animate-[spin_20s_linear_infinite]">
+            <Sparkles className="w-full h-full" />
+          </div>
+          <div className="absolute top-32 right-20 w-12 h-12 text-secondary/40 animate-[spin_15s_linear_infinite_reverse]">
+            <Zap className="w-full h-full" />
+          </div>
+          <div className="absolute bottom-20 left-1/4 w-20 h-20 text-primary/30 animate-[bounce_3s_ease-in-out_infinite]">
+            <Target className="w-full h-full" />
+          </div>
+          <div className="absolute top-1/2 right-1/3 w-14 h-14 text-secondary/30 animate-[spin_25s_linear_infinite]">
+            <Sparkles className="w-full h-full" />
+          </div>
         </div>
         
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
-          <div className="absolute top-8 right-8 flex items-center gap-3">
-            {user ? (
-              <>
-                <NotificationBell />
-                <CoinsDialog userId={user.id} />
-                <UserProfileMenu user={user} profile={profile} onSignOut={handleSignOut} />
-              </>
-            ) : (
-              <Button variant="default" onClick={() => navigate("/auth")}>
-                {t('login')}
-              </Button>
-            )}
-          </div>
-
-          {/* Brand Name */}
-          <div className="mb-4 animate-fade-in">
-            <h2 className="text-2xl sm:text-3xl font-bold text-foreground">{t('platformName')}</h2>
-          </div>
-
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-8 backdrop-blur-sm animate-fade-in">
-            <Sparkles className="h-4 w-4 text-primary" />
-            <span className="text-sm font-medium text-primary">{t('aiPlatformTag')}</span>
-          </div>
-          
-          {/* Mascot Cat + Time + Main Title Section */}
-          <div className="mb-6 animate-fade-in" style={{ animationDelay: '0.1s' }}>
-            <div className="flex items-center justify-center gap-4 mb-4">
-              <div className="relative w-20 h-20 animate-bounce" style={{ animationDuration: '3s' }}>
-                <img 
-                  src={mascotCat} 
-                  alt={t('mascotName')} 
-                  className="w-full h-full object-contain drop-shadow-2xl"
-                />
-              </div>
-              <span className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                {t('heroTimeTag')}
+        {/* Navigation */}
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center py-6">
+            <div className="flex items-center gap-2">
+              <Sparkles className="h-8 w-8 text-primary" />
+              <span className="text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                {t('platformName')}
               </span>
             </div>
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold bg-gradient-to-r from-foreground via-primary to-secondary bg-clip-text text-transparent leading-tight">
-              {t('heroMainTitle')}
-            </h1>
-          </div>
-
-          {/* Feature Tags */}
-          <div className="flex flex-wrap items-center justify-center gap-3 mb-8 animate-fade-in" style={{ animationDelay: '0.2s' }}>
-            <div className="px-6 py-2 rounded-full bg-gradient-to-r from-primary to-primary-glow text-primary-foreground font-medium shadow-lg hover:scale-105 transition-transform">
-              {t('featureAI')}
-            </div>
-            <div className="px-6 py-2 rounded-full bg-gradient-to-r from-secondary to-secondary/70 text-secondary-foreground font-medium shadow-lg hover:scale-105 transition-transform">
-              {t('featureAuto')}
-            </div>
-            <div className="px-6 py-2 rounded-full bg-gradient-to-r from-primary to-secondary text-primary-foreground font-medium shadow-lg hover:scale-105 transition-transform">
-              {t('featureMulti')}
+            <div className="flex items-center gap-3">
+              {user ? (
+                <>
+                  <NotificationBell />
+                  <CoinsDialog userId={user.id} />
+                  <UserProfileMenu user={user} profile={profile} onSignOut={handleSignOut} />
+                </>
+              ) : (
+                <Button variant="default" onClick={() => navigate("/auth")}>
+                  {t('login')}
+                </Button>
+              )}
             </div>
           </div>
-          
-          <p className="text-xl sm:text-2xl text-muted-foreground mb-12 max-w-3xl mx-auto animate-fade-in" style={{ animationDelay: '0.3s' }}>
-            {t('heroSubtitle')}
-          </p>
+        </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto mb-8">
-            <div className="p-6 rounded-2xl bg-card/30 backdrop-blur-sm border border-border/50 hover:border-primary/50 transition-all hover:scale-105 hover:shadow-xl animate-fade-in" style={{ animationDelay: '0.4s' }}>
-              <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center mb-4 mx-auto animate-pulse">
-                <Sparkles className="h-6 w-6 text-primary-foreground" />
+        {/* Hero Content */}
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 pt-10">
+          <div className="text-center mb-12">
+            {/* Top Tag */}
+            <div className="inline-block mb-6 animate-fade-in">
+              <span className="text-sm font-medium text-primary/80">{t('aiPlatformTag')}</span>
+            </div>
+            
+            {/* Main Title with Icon */}
+            <div className="mb-8 animate-fade-in" style={{ animationDelay: '0.1s' }}>
+              <div className="flex items-center justify-center gap-4 mb-6">
+                <div className="text-6xl">⏱️</div>
+                <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold bg-gradient-to-r from-purple-600 via-blue-600 to-purple-600 bg-clip-text text-transparent leading-tight">
+                  {t('heroMainTitle')}
+                </h1>
               </div>
-              <h3 className="text-lg font-semibold mb-2">{t('smartGeneration')}</h3>
-              <p className="text-sm text-muted-foreground">
-                {t('smartGenerationDesc')}
-              </p>
             </div>
 
-            <div className="p-6 rounded-2xl bg-card/30 backdrop-blur-sm border border-border/50 hover:border-secondary/50 transition-all hover:scale-105 hover:shadow-xl animate-fade-in" style={{ animationDelay: '0.5s' }}>
-              <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-secondary to-secondary/70 flex items-center justify-center mb-4 mx-auto animate-pulse" style={{ animationDelay: '0.5s' }}>
-                <Zap className="h-6 w-6 text-secondary-foreground" />
+            {/* Feature Tags */}
+            <div className="flex flex-wrap items-center justify-center gap-3 mb-8 animate-fade-in" style={{ animationDelay: '0.2s' }}>
+              <div className="px-6 py-3 rounded-full bg-gradient-to-r from-purple-500 to-purple-600 text-white font-semibold shadow-lg hover:scale-105 transition-transform">
+                {t('featureTag1')}
               </div>
-              <h3 className="text-lg font-semibold mb-2">{t('multiPlatform')}</h3>
-              <p className="text-sm text-muted-foreground">
-                {t('multiPlatformDesc')}
-              </p>
+              <div className="px-6 py-3 rounded-full bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold shadow-lg hover:scale-105 transition-transform">
+                {t('featureTag2')}
+              </div>
+              <div className="px-6 py-3 rounded-full bg-gradient-to-r from-purple-500 to-blue-500 text-white font-semibold shadow-lg hover:scale-105 transition-transform">
+                {t('featureTag3')}
+              </div>
             </div>
+            
+            {/* Subtitle */}
+            <p className="text-lg text-muted-foreground max-w-3xl mx-auto mb-12 animate-fade-in leading-relaxed" style={{ animationDelay: '0.3s' }}>
+              {t('heroSubtitle')}
+            </p>
 
-            <div className="p-6 rounded-2xl bg-card/30 backdrop-blur-sm border border-border/50 hover:border-primary/50 transition-all hover:scale-105 hover:shadow-xl animate-fade-in" style={{ animationDelay: '0.6s' }}>
-              <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center mb-4 mx-auto animate-pulse" style={{ animationDelay: '1s' }}>
-                <Target className="h-6 w-6 text-primary-foreground" />
+            {/* Social Platform Title */}
+            <h3 className="text-2xl font-bold mb-6 animate-fade-in" style={{ animationDelay: '0.4s' }}>
+              {t('keyFeatureTitle')}
+            </h3>
+
+            {/* Social Platform Icons */}
+            <div className="flex justify-center items-center gap-6 mb-12 animate-fade-in" style={{ animationDelay: '0.5s' }}>
+              <div className="w-16 h-16 rounded-2xl bg-blue-600 flex items-center justify-center hover:scale-110 transition-transform shadow-lg">
+                <Facebook className="w-10 h-10 text-white" />
               </div>
-              <h3 className="text-lg font-semibold mb-2">{t('preciseFramework')}</h3>
-              <p className="text-sm text-muted-foreground">
-                {t('preciseFrameworkDesc')}
-              </p>
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-600 via-pink-600 to-orange-500 flex items-center justify-center hover:scale-110 transition-transform shadow-lg">
+                <Instagram className="w-10 h-10 text-white" />
+              </div>
+              <div className="w-16 h-16 rounded-2xl bg-black flex items-center justify-center hover:scale-110 transition-transform shadow-lg">
+                <span className="text-2xl font-bold text-white">Threads</span>
+              </div>
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-red-500 to-pink-500 flex items-center justify-center hover:scale-110 transition-transform shadow-lg">
+                <span className="text-2xl font-bold text-white">小紅書</span>
+              </div>
+              <div className="w-16 h-16 rounded-2xl bg-black flex items-center justify-center hover:scale-110 transition-transform shadow-lg">
+                <Twitter className="w-10 h-10 text-white" />
+              </div>
             </div>
+          </div>
+
+          {/* Mascot positioned at bottom right */}
+          <div className="fixed bottom-0 right-0 w-64 h-64 pointer-events-none z-50 animate-bounce" style={{ animationDuration: '3s' }}>
+            <img 
+              src={duckMascot} 
+              alt={t('mascotName')} 
+              className="w-full h-full object-contain drop-shadow-2xl"
+            />
           </div>
         </div>
       </div>
