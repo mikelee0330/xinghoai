@@ -12,6 +12,7 @@ import { NotificationBell } from "@/components/NotificationBell";
 import { CoinsDialog } from "@/components/CoinsDialog";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useTranslation } from "@/lib/i18n";
+import mascotCat from "@/assets/mascot-cat.png";
 
 const Index = () => {
   const [user, setUser] = useState(null);
@@ -76,10 +77,18 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
       <div className="relative overflow-hidden">
+        {/* Animated Background */}
         <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-background to-secondary/20" />
         <div className="absolute inset-0" style={{ 
           backgroundImage: 'radial-gradient(circle at 20% 50%, hsl(263 70% 50% / 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 80%, hsl(217 91% 60% / 0.15) 0%, transparent 50%)',
         }} />
+        
+        {/* Floating shapes animation */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-primary/5 rounded-full blur-3xl animate-[pulse_8s_ease-in-out_infinite]" />
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-secondary/5 rounded-full blur-3xl animate-[pulse_10s_ease-in-out_infinite]" style={{ animationDelay: '2s' }} />
+          <div className="absolute top-1/2 right-1/3 w-48 h-48 bg-primary/5 rounded-full blur-2xl animate-[pulse_6s_ease-in-out_infinite]" style={{ animationDelay: '4s' }} />
+        </div>
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
           <div className="absolute top-8 right-8 flex items-center gap-3">
@@ -96,14 +105,26 @@ const Index = () => {
             )}
           </div>
 
+          {/* Brand Name */}
+          <div className="mb-4 animate-fade-in">
+            <h2 className="text-2xl sm:text-3xl font-bold text-foreground">{t('platformName')}</h2>
+          </div>
+
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-8 backdrop-blur-sm animate-fade-in">
             <Sparkles className="h-4 w-4 text-primary" />
             <span className="text-sm font-medium text-primary">{t('aiPlatformTag')}</span>
           </div>
           
-          {/* New Time + Main Title Section */}
+          {/* Mascot Cat + Time + Main Title Section */}
           <div className="mb-6 animate-fade-in" style={{ animationDelay: '0.1s' }}>
-            <div className="flex items-center justify-center gap-2 mb-4">
+            <div className="flex items-center justify-center gap-4 mb-4">
+              <div className="relative w-20 h-20 animate-bounce" style={{ animationDuration: '3s' }}>
+                <img 
+                  src={mascotCat} 
+                  alt={t('mascotName')} 
+                  className="w-full h-full object-contain drop-shadow-2xl"
+                />
+              </div>
               <span className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
                 {t('heroTimeTag')}
               </span>
