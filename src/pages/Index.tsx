@@ -78,7 +78,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-purple-50 via-white to-blue-50 dark:from-purple-950/20 dark:via-background dark:to-blue-950/20">
+      <div className="relative overflow-hidden bg-gradient-to-br from-purple-100/80 via-pink-50/60 to-blue-100/70 dark:from-purple-900/30 dark:via-pink-900/20 dark:to-blue-900/30" style={{ background: 'linear-gradient(135deg, hsl(280, 80%, 92%), hsl(320, 70%, 94%), hsl(240, 90%, 94%), hsl(200, 85%, 95%))' }}>
         {/* Animated AI Robots Background */}
         <div className="absolute inset-0 overflow-hidden opacity-30">
           <div className="absolute top-10 left-10 w-16 h-16 text-primary/40 animate-[spin_20s_linear_infinite]">
