@@ -5,7 +5,7 @@ import { ContentGenerator } from "@/components/ContentGenerator";
 import { BrandSettings } from "@/components/BrandSettings";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Sparkles, Zap, Target, Clock } from "lucide-react";
+import { Sparkles, Zap, Target } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { UserProfileMenu } from "@/components/UserProfileMenu";
 import { NotificationBell } from "@/components/NotificationBell";
@@ -103,13 +103,10 @@ const Index = () => {
           
           {/* New Time + Main Title Section */}
           <div className="mb-6 animate-fade-in" style={{ animationDelay: '0.1s' }}>
-            <div className="flex items-center justify-center gap-3 mb-4">
-              <div className="flex items-center gap-2 text-4xl sm:text-5xl font-bold">
-                <Clock className="h-10 w-10 text-primary animate-pulse" />
-                <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                  {t('heroTimeTag')}
-                </span>
-              </div>
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <span className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                {t('heroTimeTag')}
+              </span>
             </div>
             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold bg-gradient-to-r from-foreground via-primary to-secondary bg-clip-text text-transparent leading-tight">
               {t('heroMainTitle')}
