@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Sparkles, Loader2, Copy, Check, Trash2, Eye, Package } from "lucide-react";
+import { Sparkles, Loader2, Copy, Check, Trash2, Eye, Package, FileText, Video } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 interface BrandSetting {
@@ -35,6 +35,9 @@ interface GenerationHistory {
   additionalRequirements: string;
   brandId?: string;
   brandName?: string;
+  brand_settings?: {
+    brand_name: string;
+  };
 }
 
 export const ContentGenerator = () => {
@@ -85,7 +88,12 @@ export const ContentGenerator = () => {
 
     const { data, error } = await supabase
       .from("generation_history")
-      .select("*")
+      .select(`
+        *,
+        brand_settings (
+          brand_name
+        )
+      `)
       .eq("user_id", user.id)
       .order("created_at", { ascending: false })
       .limit(50);
@@ -111,6 +119,7 @@ export const ContentGenerator = () => {
           framework: item.framework || "問題共鳴法",
           contentType: item.content_type,
           additionalRequirements: "",
+          brand_settings: item.brand_settings,
         };
       });
       setHistory(formattedHistory);
@@ -698,13 +707,24 @@ export const ContentGenerator = () => {
                     <div className="font-semibold text-base mb-2">
                       {item.title}
                     </div>
-                    <div className="text-xs text-muted-foreground">
-                      <span className="inline-block px-2 py-0.5 bg-primary/10 rounded text-primary mr-2">
+                    <div className="flex flex-wrap gap-2 text-xs">
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-primary/10 rounded text-primary">
+                        {item.contentType === "影片腳本" ? (
+                          <Video className="w-3 h-3" />
+                        ) : (
+                          <FileText className="w-3 h-3" />
+                        )}
                         {item.contentType}
                       </span>
                       <span className="inline-block px-2 py-0.5 bg-secondary/10 rounded text-secondary">
                         {item.platform}
                       </span>
+                      {item.brand_settings?.brand_name && (
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-accent/10 rounded text-accent-foreground">
+                          <Package className="w-3 h-3" />
+                          {item.brand_settings.brand_name}
+                        </span>
+                      )}
                     </div>
                     <div className="text-sm text-muted-foreground mt-2 line-clamp-2">
                       {summary}
@@ -732,13 +752,24 @@ export const ContentGenerator = () => {
                         <div className="flex items-start justify-between">
                           <div className="flex-1">
                             <DialogTitle className="text-2xl font-bold mb-2">{item.title}</DialogTitle>
-                            <div className="flex gap-2">
-                              <span className="inline-block px-3 py-1 bg-primary/10 rounded-full text-primary text-sm font-medium">
+                            <div className="flex flex-wrap gap-2">
+                              <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-primary/10 rounded-full text-primary text-sm font-medium">
+                                {item.contentType === "影片腳本" ? (
+                                  <Video className="w-4 h-4" />
+                                ) : (
+                                  <FileText className="w-4 h-4" />
+                                )}
                                 {item.contentType}
                               </span>
                               <span className="inline-block px-3 py-1 bg-secondary/10 rounded-full text-secondary text-sm font-medium">
                                 {item.platform}
                               </span>
+                              {item.brand_settings?.brand_name && (
+                                <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-accent/10 rounded-full text-accent-foreground text-sm font-medium">
+                                  <Package className="w-4 h-4" />
+                                  {item.brand_settings.brand_name}
+                                </span>
+                              )}
                             </div>
                           </div>
                         </div>
