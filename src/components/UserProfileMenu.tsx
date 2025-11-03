@@ -112,26 +112,23 @@ export const UserProfileMenu = ({ user, profile, onSignOut }: UserProfileMenuPro
         </DropdownMenuItem>
         
         <DropdownMenuSub>
-          <DropdownMenuSubTrigger className="cursor-pointer">
+          <DropdownMenuSubTrigger>
             <Languages className="mr-2 h-4 w-4" />
             <span>{labels.language}</span>
-            <span className="ml-auto text-xs text-muted-foreground">{currentLanguageLabel}</span>
+            <span className="ml-auto text-xs text-muted-foreground mr-2">{currentLanguageLabel}</span>
           </DropdownMenuSubTrigger>
-          <DropdownMenuSubContent className="bg-background/95 backdrop-blur-sm border-border" sideOffset={8}>
+          <DropdownMenuSubContent>
             {languages.map((lang) => (
               <DropdownMenuItem
                 key={lang.code}
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  console.log('Language selected:', lang.code);
+                onSelect={() => {
+                  console.log('Language changing to:', lang.code);
                   setLanguage(lang.code);
                   toast({
                     title: language === 'English' ? 'Language Changed' : language === '日本語' ? '言語を変更しました' : language === '简体中文' ? '语言已更改' : '語言已更改',
                     description: lang.label,
                   });
                 }}
-                className="cursor-pointer"
               >
                 <Check className={`mr-2 h-4 w-4 ${language === lang.code ? 'opacity-100' : 'opacity-0'}`} />
                 <span>{lang.label}</span>
