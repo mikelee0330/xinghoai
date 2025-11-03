@@ -17,6 +17,8 @@ export type Database = {
       brand_settings: {
         Row: {
           additional_notes: string | null
+          ai_analysis: string | null
+          brand_files: string[] | null
           brand_name: string
           brand_tone: string | null
           created_at: string
@@ -28,6 +30,8 @@ export type Database = {
         }
         Insert: {
           additional_notes?: string | null
+          ai_analysis?: string | null
+          brand_files?: string[] | null
           brand_name: string
           brand_tone?: string | null
           created_at?: string
@@ -39,6 +43,8 @@ export type Database = {
         }
         Update: {
           additional_notes?: string | null
+          ai_analysis?: string | null
+          brand_files?: string[] | null
           brand_name?: string
           brand_tone?: string | null
           created_at?: string
@@ -52,6 +58,7 @@ export type Database = {
       }
       generation_history: {
         Row: {
+          brand_id: string | null
           content_direction: string
           content_type: string
           created_at: string
@@ -64,6 +71,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          brand_id?: string | null
           content_direction: string
           content_type: string
           created_at?: string
@@ -76,6 +84,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          brand_id?: string | null
           content_direction?: string
           content_type?: string
           created_at?: string
@@ -87,7 +96,15 @@ export type Database = {
           tone?: string
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "generation_history_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "brand_settings"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
@@ -95,6 +112,7 @@ export type Database = {
           display_name: string | null
           email: string | null
           id: string
+          preferred_language: string | null
           updated_at: string
           user_id: string
         }
@@ -103,6 +121,7 @@ export type Database = {
           display_name?: string | null
           email?: string | null
           id?: string
+          preferred_language?: string | null
           updated_at?: string
           user_id: string
         }
@@ -111,6 +130,7 @@ export type Database = {
           display_name?: string | null
           email?: string | null
           id?: string
+          preferred_language?: string | null
           updated_at?: string
           user_id?: string
         }
