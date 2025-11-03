@@ -208,11 +208,16 @@ export const ContentGenerator = () => {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="問題共鳴法">💬 問題共鳴法</SelectItem>
-                <SelectItem value="故事轉折法">🎬 故事轉折法</SelectItem>
-                <SelectItem value="限時優惠法">🔥 限時優惠法</SelectItem>
-                <SelectItem value="專家背書法">🧠 專家背書法</SelectItem>
-                <SelectItem value="產品展示法">🛍 產品展示法</SelectItem>
+                <SelectItem value="問題共鳴法">💬 問題共鳴法 | 以觀眾痛點開場，引起共鳴</SelectItem>
+                <SelectItem value="故事轉折法">🎬 故事轉折法 | 用故事設局與反轉，引發好奇</SelectItem>
+                <SelectItem value="限時優惠法">🔥 限時優惠法 | 製造稀缺感與緊迫感，引導行動</SelectItem>
+                <SelectItem value="客戶見證法">🗣 客戶見證法 | 以真實案例建立信任與口碑效應</SelectItem>
+                <SelectItem value="專家背書法">🧠 專家背書法 | 引用專業觀點或權威意見提升信任度</SelectItem>
+                <SelectItem value="場景展示法">🏙 場景展示法 | 帶入真實使用場景，增強沉浸感</SelectItem>
+                <SelectItem value="數據支撐法">📊 數據支撐法 | 用具體數據或事實證明說服力</SelectItem>
+                <SelectItem value="對比展示法">⚖️ 對比展示法 | 透過差異強化產品亮點與優勢</SelectItem>
+                <SelectItem value="互動促銷法">🎯 互動促銷法 | 以提問或互動引導參與與行動</SelectItem>
+                <SelectItem value="感情共鳴法">❤️ 感情共鳴法 | 以情感故事建立連結，引發共鳴</SelectItem>
               </SelectContent>
             </Select>
           </div>

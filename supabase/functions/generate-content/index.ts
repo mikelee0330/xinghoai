@@ -34,8 +34,13 @@ serve(async (req) => {
       "問題共鳴法": "PAS (Problem → Agitate → Solve)",
       "故事轉折法": "SCQA (Situation → Complication → Question → Answer)",
       "限時優惠法": "AIDA (Attention → Interest → Desire → Action)",
+      "客戶見證法": "BAB (Before → After → Bridge)",
       "專家背書法": "SRT (Situation → Resistance → Takeaway)",
-      "產品展示法": "FAB (Feature → Advantage → Benefit)",
+      "場景展示法": "TDC (Teaser → Demonstration → Conclusion)",
+      "數據支撐法": "3C (Context → Conflict → Conclusion)",
+      "對比展示法": "FAB (Feature → Advantage → Benefit)",
+      "互動促銷法": "Hooks (Hook → Hold → Payoff)",
+      "感情共鳴法": "SCQA (Situation → Complication → Question → Answer)",
     };
 
     const professionalFramework = frameworkMapping[framework] || framework;
