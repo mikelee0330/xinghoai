@@ -177,8 +177,8 @@ const Index = () => {
             </div>
           </div>
 
-          {/* Mascot positioned at bottom right - smaller size */}
-          <div className="absolute bottom-0 right-0 w-48 h-48 pointer-events-none z-50 animate-bounce" style={{ animationDuration: '3s' }}>
+          {/* Mascot positioned at right center */}
+          <div className="absolute top-1/2 right-8 -translate-y-1/2 w-48 h-48 pointer-events-none z-50 animate-bounce" style={{ animationDuration: '3s' }}>
             <img 
               src={mascotCat} 
               alt={t('mascotName')} 
