@@ -554,22 +554,26 @@ export const ContentGenerator = () => {
             )}
 
             <div className="space-y-2">
-              <Label>{t('contentDirection')}</Label>
-              <div className="grid grid-cols-2 gap-3">
+              <Label className="text-sm">{t('contentDirection')}</Label>
+              <div className="grid grid-cols-2 gap-2">
                 {contentDirections.map((direction) => (
                   <button
                     key={direction.value}
                     type="button"
                     onClick={() => setContentDirection(direction.value)}
-                    className={`p-4 rounded-lg border-2 transition-all text-left ${
+                    className={`p-2.5 rounded-lg border transition-all text-left ${
                       contentDirection === direction.value
-                        ? "border-primary bg-primary/10"
-                        : "border-border hover:border-primary/50"
+                        ? "border-primary bg-primary/10 shadow-sm"
+                        : "border-border/50 hover:border-primary/50 hover:bg-accent/50"
                     }`}
                   >
-                    <div className="text-2xl mb-1">{direction.emoji}</div>
-                    <div className="font-semibold text-sm mb-1">{direction.label}</div>
-                    <div className="text-xs text-muted-foreground">{direction.desc}</div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-lg">{direction.emoji}</span>
+                      <div className="flex-1 min-w-0">
+                        <div className="font-semibold text-xs truncate">{direction.label}</div>
+                        <div className="text-[10px] text-muted-foreground leading-tight">{direction.desc}</div>
+                      </div>
+                    </div>
                   </button>
                 ))}
               </div>
