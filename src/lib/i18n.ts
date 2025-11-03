@@ -116,7 +116,7 @@ export const translations = {
     // Hero Section
     aiPlatformTag: '✨ AI 驅動的內容創作平台',
     platformName: '星火AI新媒體',
-    heroMainTitle: '星火 AI 內容平台',
+    heroMainTitle: 'AI獲客內容平台',
     heroSubtitle: '一鍵生成專業社群內容，讓創作變得更簡單',
     featureTag1: '⚡ 智能生成',
     featureTag2: '🎯 精準框架',
@@ -249,7 +249,7 @@ export const translations = {
     // Hero Section
     aiPlatformTag: '✨ AI 驱动的内容创作平台',
     platformName: '星火AI新媒体',
-    heroMainTitle: '星火 AI 内容平台',
+    heroMainTitle: 'AI获客内容平台',
     heroSubtitle: '一键生成专业社群内容，让创作变得更简单',
     featureTag1: '⚡ 智能生成',
     featureTag2: '🎯 精准框架',
@@ -382,7 +382,7 @@ export const translations = {
     // Hero Section
     aiPlatformTag: '✨ AI-Powered Content Creation Platform',
     platformName: 'SparkFire AI Media',
-    heroMainTitle: 'SparkFire AI Content Platform',
+    heroMainTitle: 'AI Customer Acquisition Platform',
     heroSubtitle: 'Generate professional social content with one click, making content creation easier',
     featureTag1: '⚡ Smart Generation',
     featureTag2: '🎯 Precise Framework',
@@ -515,7 +515,7 @@ export const translations = {
     // Hero Section
     aiPlatformTag: '✨ AI駆動のコンテンツ制作プラットフォーム',
     platformName: 'スパークファイアAIメディア',
-    heroMainTitle: 'スパークファイア AI コンテンツプラットフォーム',
+    heroMainTitle: 'AI顧客獲得コンテンツプラットフォーム',
     heroSubtitle: 'ワンクリックでプロフェッショナルなソーシャルコンテンツを生成し、コンテンツ制作をより簡単に',
     featureTag1: '⚡ スマート生成',
     featureTag2: '🎯 精密フレームワーク',
