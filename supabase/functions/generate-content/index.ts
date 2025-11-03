@@ -11,9 +11,34 @@ serve(async (req) => {
   }
 
   try {
-    const { keywords, platform, tone, framework, contentType } = await req.json();
+    const { 
+      contentDirection,
+      keywords, 
+      textContent,
+      platform, 
+      tone, 
+      framework,
+      contentType,
+      wordCount,
+      videoLength,
+      additionalRequirements 
+    } = await req.json();
     
-    console.log("Generating content with params:", { keywords, platform, tone, framework, contentType });
+    console.log("Generating content with params:", { 
+      contentDirection, keywords, textContent, platform, tone, framework, 
+      contentType, wordCount, videoLength, additionalRequirements 
+    });
+
+    // Map user-friendly framework names to professional frameworks
+    const frameworkMapping: Record<string, string> = {
+      "問題共鳴法": "PAS (Problem → Agitate → Solve)",
+      "故事轉折法": "SCQA (Situation → Complication → Question → Answer)",
+      "限時優惠法": "AIDA (Attention → Interest → Desire → Action)",
+      "專家背書法": "SRT (Situation → Resistance → Takeaway)",
+      "產品展示法": "FAB (Feature → Advantage → Benefit)",
+    };
+
+    const professionalFramework = frameworkMapping[framework] || framework;
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) {
@@ -21,33 +46,35 @@ serve(async (req) => {
     }
 
     // Build system prompt for content generation
-    const systemPrompt = `你是一位專業的社群媒體內容創作專家，擅長為不同平台創作吸引人的內容。
+    const systemPrompt = `你是一位專業的社群內容創作專家，擅長根據品牌調性和目標客群創作吸引人的社群貼文和影片腳本。
+請根據以下設定生成內容：
 
-請根據以下要求生成內容：
-- 平台：${platform}
-- 語調：${tone}
-- 文案框架：${framework}
-- 內容類型：${contentType}
+內容方向：${contentDirection}
+平台：${platform}
+語調風格：${tone}
+文案框架：${professionalFramework}
+內容類型：${contentType}
+${contentType === "貼文腳本" && wordCount ? `字數要求：${wordCount}` : ""}
+${contentType === "影片腳本" && videoLength ? `長度要求：${videoLength}` : ""}
+
+請確保內容：
+1. 符合所選的文案框架結構
+2. 適合目標平台的特性
+3. 語調一致且吸引目標受眾
+4. 包含適當的表情符號和換行（適用於社群媒體）
+${contentType === "影片腳本" ? "5. 適合口播，語句自然流暢" : ""}
 
 請用繁體中文生成專業且吸引人的內容。`;
 
-    const userPrompt = `關鍵字：${keywords}
+    const userPrompt = `
+主題關鍵字：
+${keywords}
 
-請根據上述關鍵字和要求，創作一篇完整的${contentType}。
+${textContent ? `文本內容：\n${textContent}\n` : ""}
 
-如果是貼文腳本，請包含：
-1. 吸睛的開頭
-2. 有價值的內容主體
-3. 明確的行動呼籲（CTA）
-4. 相關的標籤建議
+${additionalRequirements ? `補充要求：\n${additionalRequirements}` : ""}
 
-如果是影片腳本，請包含：
-1. 開場白（前3秒吸引注意力）
-2. 主要內容（清楚的重點段落）
-3. 結尾呼籲行動
-4. 口播時間建議
-
-請確保內容符合${platform}平台的特性和${tone}的語調。`;
+請根據以上資訊，創作一篇${contentType}。`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",

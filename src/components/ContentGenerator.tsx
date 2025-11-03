@@ -10,15 +10,32 @@ import { supabase } from "@/integrations/supabase/client";
 import { Sparkles, Loader2 } from "lucide-react";
 
 export const ContentGenerator = () => {
+  const [contentDirection, setContentDirection] = useState("知識分享型");
   const [keywords, setKeywords] = useState("");
+  const [textContent, setTextContent] = useState("");
   const [platform, setPlatform] = useState("Instagram");
   const [tone, setTone] = useState("professional");
   const [framework, setFramework] = useState("問題共鳴法");
   const [contentType, setContentType] = useState("post");
+  const [wordCount, setWordCount] = useState("300字內");
+  const [videoLength, setVideoLength] = useState("50~75字(10~15s)");
   const [additionalRequirements, setAdditionalRequirements] = useState("");
   const [generatedContent, setGeneratedContent] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+
+  const contentDirections = [
+    { value: "知識分享型", label: "知識分享型", emoji: "📚", desc: "教學干貨帖，輕鬆愛分享" },
+    { value: "情感共鳴型", label: "情感共鳴型", emoji: "🖤", desc: "分享感受，建立情感連接" },
+    { value: "消除疑慮型", label: "消除疑慮型", emoji: "🧠", desc: "破除迷思，讓人放心買" },
+    { value: "種草推薦型", label: "種草推薦型", emoji: "🎁", desc: "好物分享，激發購買欲" },
+    { value: "引發討論型", label: "引發討論型", emoji: "💬", desc: "激發不同觀點，引起討論" },
+    { value: "品牌故事型", label: "品牌故事型", emoji: "🍱", desc: "說品牌故事，留下印象" },
+    { value: "促進銷售型", label: "促進銷售型", emoji: "👗", desc: "放大賣點，激發客戶需求" },
+    { value: "痛點營銷型", label: "痛點營銷型", emoji: "🛒", desc: "放大痛點，喚醒購買動力" },
+    { value: "深度見解型", label: "深度見解型", emoji: "🔍", desc: "深度見解，打造專家形象" },
+    { value: "贊美好物型", label: "贊美好物型", emoji: "☀️", desc: "細膩贊美，建立好感形象" },
+  ];
 
   const keywordSuggestions = [
     "產品賣點", "優惠活動", "適用人群", "用戶痛點", "適用場景",
@@ -28,7 +45,7 @@ export const ContentGenerator = () => {
   ];
 
   const handleKeywordSuggestionClick = (suggestion: string) => {
-    setKeywords((prev) => prev ? `${prev}、${suggestion}` : suggestion);
+    setKeywords((prev) => prev ? `${prev}\n${suggestion}:` : `${suggestion}:`);
   };
 
   const handleGenerate = async () => {
@@ -47,11 +64,15 @@ export const ContentGenerator = () => {
     try {
       const { data, error } = await supabase.functions.invoke("generate-content", {
         body: {
+          contentDirection,
           keywords,
+          textContent,
           platform,
           tone,
           framework,
           contentType: contentType === "post" ? "貼文腳本" : "影片腳本",
+          wordCount: contentType === "post" ? wordCount : undefined,
+          videoLength: contentType === "video" ? videoLength : undefined,
           additionalRequirements,
         },
       });
@@ -91,13 +112,35 @@ export const ContentGenerator = () => {
         
         <div className="space-y-4">
           <div className="space-y-2">
+            <Label>內容方向</Label>
+            <div className="grid grid-cols-2 gap-3">
+              {contentDirections.map((direction) => (
+                <button
+                  key={direction.value}
+                  type="button"
+                  onClick={() => setContentDirection(direction.value)}
+                  className={`p-4 rounded-lg border-2 transition-all text-left ${
+                    contentDirection === direction.value
+                      ? "border-primary bg-primary/10"
+                      : "border-border hover:border-primary/50"
+                  }`}
+                >
+                  <div className="text-2xl mb-1">{direction.emoji}</div>
+                  <div className="font-semibold text-sm mb-1">{direction.label}</div>
+                  <div className="text-xs text-muted-foreground">{direction.desc}</div>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="space-y-2">
             <Label htmlFor="keywords">主題關鍵字</Label>
-            <Input
+            <Textarea
               id="keywords"
-              placeholder="例如：情緒智力、健身新手、時間管理"
+              placeholder="例如：產品賣點: 高效保濕&#10;適用人群: 25-35歲女性"
               value={keywords}
               onChange={(e) => setKeywords(e.target.value)}
-              className="bg-background/50"
+              className="bg-background/50 min-h-[80px]"
             />
             <div className="flex flex-wrap gap-2 mt-2">
               {keywordSuggestions.map((suggestion) => (
@@ -113,6 +156,20 @@ export const ContentGenerator = () => {
                 </Button>
               ))}
             </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="textContent">文本內容</Label>
+            <Textarea
+              id="textContent"
+              placeholder="貼貼內容文本"
+              value={textContent}
+              onChange={(e) => setTextContent(e.target.value)}
+              className="bg-background/50 min-h-[100px]"
+            />
+            <p className="text-xs text-muted-foreground">
+              提示：直接貼上你寫好的內容或小紅書從中分析亮點，變出吸睛標題！
+            </p>
           </div>
 
           <div className="space-y-2">
@@ -145,22 +202,17 @@ export const ContentGenerator = () => {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="framework">文案框架（風格）</Label>
+            <Label htmlFor="framework">文案風格</Label>
             <Select value={framework} onValueChange={setFramework}>
               <SelectTrigger id="framework" className="bg-background/50">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="問題共鳴法">問題共鳴法</SelectItem>
-                <SelectItem value="故事轉折法">故事轉折法</SelectItem>
-                <SelectItem value="限時優惠法">限時優惠法</SelectItem>
-                <SelectItem value="客戶見證法">客戶見證法</SelectItem>
-                <SelectItem value="專家背書法">專家背書法</SelectItem>
-                <SelectItem value="場景展示法">場景展示法</SelectItem>
-                <SelectItem value="數據支撐法">數據支撐法</SelectItem>
-                <SelectItem value="對比展示法">對比展示法</SelectItem>
-                <SelectItem value="互動促銷法">互動促銷法</SelectItem>
-                <SelectItem value="感情共鳴法">感情共鳴法</SelectItem>
+                <SelectItem value="問題共鳴法">💬 問題共鳴法</SelectItem>
+                <SelectItem value="故事轉折法">🎬 故事轉折法</SelectItem>
+                <SelectItem value="限時優惠法">🔥 限時優惠法</SelectItem>
+                <SelectItem value="專家背書法">🧠 專家背書法</SelectItem>
+                <SelectItem value="產品展示法">🛍 產品展示法</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -173,10 +225,43 @@ export const ContentGenerator = () => {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="post">貼文腳本</SelectItem>
-                <SelectItem value="video">影片腳本</SelectItem>
+                <SelectItem value="video">影片口播</SelectItem>
               </SelectContent>
             </Select>
           </div>
+
+          {contentType === "post" && (
+            <div className="space-y-2">
+              <Label htmlFor="wordCount">字數</Label>
+              <Select value={wordCount} onValueChange={setWordCount}>
+                <SelectTrigger id="wordCount" className="bg-background/50">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="300字內">300字內</SelectItem>
+                  <SelectItem value="500-1500字">500-1500字</SelectItem>
+                  <SelectItem value="1500-2000字">1500-2000字</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+
+          {contentType === "video" && (
+            <div className="space-y-2">
+              <Label htmlFor="videoLength">字數</Label>
+              <Select value={videoLength} onValueChange={setVideoLength}>
+                <SelectTrigger id="videoLength" className="bg-background/50">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="50~75字(10~15s)">50~75字(10~15s正常口播時長)</SelectItem>
+                  <SelectItem value="75~150字(15~30s)">75~150字(15~30s正常口播時長)</SelectItem>
+                  <SelectItem value="150~300字(30~60s)">150~300字(30~60s正常口播時長)</SelectItem>
+                  <SelectItem value="300~450字(≥60s)">300~450字(≥60s正常口播時長)</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          )}
 
           <div className="space-y-2">
             <Label htmlFor="additionalRequirements">補充要求</Label>
