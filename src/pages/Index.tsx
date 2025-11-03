@@ -1,7 +1,61 @@
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
 import { ContentGenerator } from "@/components/ContentGenerator";
-import { Sparkles, Zap, Target } from "lucide-react";
+import { BrandSettings } from "@/components/BrandSettings";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { LogOut, Sparkles, Zap, Target } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
 
 const Index = () => {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check if user is logged in
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        setUser(session.user);
+      } else {
+        navigate("/auth");
+      }
+      setLoading(false);
+    });
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (session?.user) {
+        setUser(session.user);
+      } else {
+        navigate("/auth");
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [navigate]);
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    toast({
+      title: "已登出",
+      description: "期待下次見到您！",
+    });
+    navigate("/auth");
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+          <p className="mt-4 text-muted-foreground">載入中...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
@@ -12,6 +66,13 @@ const Index = () => {
         }} />
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
+          <div className="absolute top-8 right-8">
+            <Button variant="outline" onClick={handleSignOut}>
+              <LogOut className="mr-2 h-4 w-4" />
+              登出
+            </Button>
+          </div>
+
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-8 backdrop-blur-sm">
             <Sparkles className="h-4 w-4 text-primary" />
             <span className="text-sm font-medium text-primary">AI 驅動的內容創作平台</span>
@@ -25,7 +86,7 @@ const Index = () => {
             一鍵生成專業社群內容，讓創作變得更簡單
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto mb-16">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto mb-8">
             <div className="p-6 rounded-2xl bg-card/30 backdrop-blur-sm border border-border/50 hover:border-primary/50 transition-all">
               <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center mb-4 mx-auto">
                 <Sparkles className="h-6 w-6 text-primary-foreground" />
@@ -59,9 +120,22 @@ const Index = () => {
         </div>
       </div>
 
-      {/* Content Generator Section */}
+      {/* Content Section */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <ContentGenerator />
+        <Tabs defaultValue="generator" className="w-full">
+          <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 mb-8">
+            <TabsTrigger value="generator">內容生成</TabsTrigger>
+            <TabsTrigger value="brand">品牌設定</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="generator">
+            <ContentGenerator />
+          </TabsContent>
+          
+          <TabsContent value="brand">
+            <BrandSettings />
+          </TabsContent>
+        </Tabs>
       </div>
 
       {/* Footer */}

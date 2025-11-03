@@ -44,11 +44,40 @@ export const ContentGenerator = () => {
   const { toast } = useToast();
 
   useEffect(() => {
-    const savedHistory = localStorage.getItem('contentGenerationHistory');
-    if (savedHistory) {
-      setHistory(JSON.parse(savedHistory));
-    }
+    loadHistory();
   }, []);
+
+  const loadHistory = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    
+    if (!user) return;
+
+    const { data, error } = await supabase
+      .from("generation_history")
+      .select("*")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false })
+      .limit(50);
+
+    if (error) {
+      console.error("Error loading history:", error);
+    } else if (data) {
+      const formattedHistory: GenerationHistory[] = data.map(item => ({
+        id: item.id,
+        date: item.created_at,
+        content: item.generated_content,
+        platform: item.platform,
+        contentDirection: item.content_direction,
+        keywords: item.keywords,
+        textContent: "",
+        tone: item.tone,
+        framework: item.framework || "問題共鳴法",
+        contentType: item.content_type,
+        additionalRequirements: "",
+      }));
+      setHistory(formattedHistory);
+    }
+  };
 
   const frameworkInfo: Record<string, { framework: string; structure: string; description: string }> = {
     "問題共鳴法": {
@@ -145,35 +174,52 @@ export const ContentGenerator = () => {
     }
   };
 
-  const saveToHistory = (content: string) => {
-    const newHistory: GenerationHistory = {
-      id: Date.now().toString(),
-      date: new Date().toISOString(),
-      content,
-      platform,
-      contentDirection,
-      keywords,
-      textContent,
-      tone,
-      framework,
-      contentType: contentType === "post" ? "貼文腳本" : "影片腳本",
-      wordCount: contentType === "post" ? wordCount : undefined,
-      videoLength: contentType === "video" ? videoLength : undefined,
-      additionalRequirements,
-    };
-    const updatedHistory = [newHistory, ...history];
-    setHistory(updatedHistory);
-    localStorage.setItem('contentGenerationHistory', JSON.stringify(updatedHistory));
+  const saveToHistory = async (content: string) => {
+    const { data: { user } } = await supabase.auth.getUser();
+    
+    if (!user) return;
+
+    const { data, error } = await supabase
+      .from("generation_history")
+      .insert({
+        user_id: user.id,
+        platform,
+        content_direction: contentDirection,
+        keywords,
+        content_type: contentType === "post" ? "貼文腳本" : "影片腳本",
+        tone,
+        framework,
+        generated_content: content,
+      })
+      .select()
+      .single();
+
+    if (error) {
+      console.error("Error saving to history:", error);
+    } else if (data) {
+      await loadHistory();
+    }
   };
 
-  const deleteFromHistory = (id: string) => {
-    const updatedHistory = history.filter(item => item.id !== id);
-    setHistory(updatedHistory);
-    localStorage.setItem('contentGenerationHistory', JSON.stringify(updatedHistory));
-    toast({
-      title: "已刪除",
-      description: "歷史記錄已刪除",
-    });
+  const deleteFromHistory = async (id: string) => {
+    const { error } = await supabase
+      .from("generation_history")
+      .delete()
+      .eq("id", id);
+
+    if (error) {
+      toast({
+        title: "刪除失敗",
+        description: error.message,
+        variant: "destructive",
+      });
+    } else {
+      await loadHistory();
+      toast({
+        title: "已刪除",
+        description: "歷史記錄已刪除",
+      });
+    }
   };
 
   const copyHistoryContent = async (content: string) => {
@@ -511,22 +557,32 @@ export const ContentGenerator = () => {
         
         {history.length > 0 ? (
           <div className="space-y-3">
-            {history.map((item) => (
-              <div key={item.id} className="p-4 bg-background/50 rounded-lg border border-border flex items-center justify-between gap-4">
-                <div className="flex-1 min-w-0">
-                  <div className="text-sm text-muted-foreground mb-1">
-                    {new Date(item.date).toLocaleString('zh-TW', {
-                      year: 'numeric',
-                      month: '2-digit',
-                      day: '2-digit',
-                      hour: '2-digit',
-                      minute: '2-digit'
-                    })}
+            {history.map((item) => {
+              // Extract title from content (first line or keywords)
+              const contentLines = item.content.split('\n').filter(line => line.trim());
+              const title = contentLines[0] || item.keywords.split('\n')[0] || "未命名內容";
+              const summaryLength = 50;
+              const summary = item.content.substring(0, summaryLength) + (item.content.length > summaryLength ? "..." : "");
+              
+              return (
+                <div key={item.id} className="p-4 bg-background/50 rounded-lg border border-border flex items-center justify-between gap-4">
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm text-muted-foreground mb-1">
+                      {new Date(item.date).toLocaleString('zh-TW', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                      })}
+                    </div>
+                    <div className="font-semibold text-sm mb-1">
+                      [{item.contentType}] {title}
+                    </div>
+                    <div className="text-xs text-muted-foreground truncate">
+                      {summary}
+                    </div>
                   </div>
-                  <div className="text-sm truncate">
-                    {item.content.substring(0, 30)}...
-                  </div>
-                </div>
                 <div className="flex gap-2 shrink-0">
                   <Button
                     onClick={() => copyHistoryContent(item.content)}
@@ -623,8 +679,9 @@ export const ContentGenerator = () => {
                   </Button>
                 </div>
               </div>
-            ))}
-          </div>
+            );
+          })}
+        </div>
         ) : (
           <div className="text-center py-12 text-muted-foreground">
             <p>尚無生成記錄</p>

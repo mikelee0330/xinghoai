@@ -14,7 +14,108 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      brand_settings: {
+        Row: {
+          additional_notes: string | null
+          brand_name: string
+          brand_tone: string | null
+          created_at: string
+          id: string
+          language: string | null
+          target_audience: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          additional_notes?: string | null
+          brand_name: string
+          brand_tone?: string | null
+          created_at?: string
+          id?: string
+          language?: string | null
+          target_audience?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          additional_notes?: string | null
+          brand_name?: string
+          brand_tone?: string | null
+          created_at?: string
+          id?: string
+          language?: string | null
+          target_audience?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      generation_history: {
+        Row: {
+          content_direction: string
+          content_type: string
+          created_at: string
+          framework: string | null
+          generated_content: string
+          id: string
+          keywords: string
+          platform: string
+          tone: string
+          user_id: string
+        }
+        Insert: {
+          content_direction: string
+          content_type: string
+          created_at?: string
+          framework?: string | null
+          generated_content: string
+          id?: string
+          keywords: string
+          platform: string
+          tone: string
+          user_id: string
+        }
+        Update: {
+          content_direction?: string
+          content_type?: string
+          created_at?: string
+          framework?: string | null
+          generated_content?: string
+          id?: string
+          keywords?: string
+          platform?: string
+          tone?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          display_name: string | null
+          email: string | null
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
