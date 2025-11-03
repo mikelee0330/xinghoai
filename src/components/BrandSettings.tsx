@@ -10,6 +10,7 @@ import { toast } from "@/hooks/use-toast";
 import { Loader2, Plus, Trash2 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useTranslation } from "@/lib/i18n";
+import { z } from "zod";
 
 interface BrandSetting {
   id: string;
@@ -72,12 +73,29 @@ export const BrandSettings = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.brand_name || !formData.brand_tone || !formData.target_audience) {
-      toast({
-        title: "錯誤",
-        description: "請填寫所有必填欄位",
-        variant: "destructive",
+    // Input validation
+    const brandSchema = z.object({
+      brand_name: z.string().trim().min(1, "請輸入品牌名稱").max(100, "品牌名稱不能超過 100 字元"),
+      brand_tone: z.string().trim().min(1, "請輸入品牌語調").max(500, "品牌語調不能超過 500 字元"),
+      target_audience: z.string().trim().min(1, "請輸入目標客群").max(500, "目標客群不能超過 500 字元"),
+      additional_notes: z.string().max(2000, "補充說明不能超過 2000 字元").optional(),
+    });
+
+    try {
+      brandSchema.parse({
+        brand_name: formData.brand_name,
+        brand_tone: formData.brand_tone,
+        target_audience: formData.target_audience,
+        additional_notes: formData.additional_notes || undefined,
       });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        toast({
+          title: "輸入驗證失敗",
+          description: error.errors[0].message,
+          variant: "destructive",
+        });
+      }
       return;
     }
 

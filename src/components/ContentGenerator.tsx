@@ -12,6 +12,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useTranslation } from "@/lib/i18n";
+import { z } from "zod";
 
 interface BrandSetting {
   id: string;
@@ -333,12 +334,27 @@ export const ContentGenerator = () => {
       return;
     }
 
-    if (!keywords.trim()) {
-      toast({
-        title: "請輸入關鍵字",
-        description: "請先輸入您想要創作的主題關鍵字",
-        variant: "destructive",
+    // Client-side input validation
+    const inputSchema = z.object({
+      keywords: z.string().trim().min(1, "請輸入關鍵字").max(500, "關鍵字不能超過 500 字元"),
+      textContent: z.string().max(5000, "文本內容不能超過 5000 字元").optional(),
+      additionalRequirements: z.string().max(1000, "補充要求不能超過 1000 字元").optional(),
+    });
+
+    try {
+      inputSchema.parse({
+        keywords,
+        textContent: textContent || undefined,
+        additionalRequirements: additionalRequirements || undefined,
       });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        toast({
+          title: "輸入驗證失敗",
+          description: error.errors[0].message,
+          variant: "destructive",
+        });
+      }
       return;
     }
 
@@ -389,13 +405,23 @@ export const ContentGenerator = () => {
       saveToHistory(data.content);
       toast({
         title: "內容生成成功！",
-        description: "AI 已為您生成專業的社群內容",
+        description: "已消耗 1 枚代幣",
       });
     } catch (error) {
       console.error("Error generating content:", error);
+      let errorMessage = "生成內容時發生錯誤，請稍後再試";
+      
+      if (error instanceof Error) {
+        if (error.message.includes("代幣不足")) {
+          errorMessage = "代幣不足，請先購買代幣";
+        } else {
+          errorMessage = error.message;
+        }
+      }
+      
       toast({
         title: "生成失敗",
-        description: error instanceof Error ? error.message : "生成內容時發生錯誤，請稍後再試",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {

@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -11,6 +12,33 @@ serve(async (req) => {
   }
 
   try {
+    // Verify user authentication
+    const authHeader = req.headers.get("authorization");
+    if (!authHeader) {
+      return new Response(
+        JSON.stringify({ error: "未授權：請先登入" }),
+        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    // Initialize Supabase client with user's token
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+    const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+      global: {
+        headers: { Authorization: authHeader },
+      },
+    });
+
+    // Get authenticated user
+    const { data: { user }, error: userError } = await supabase.auth.getUser();
+    if (userError || !user) {
+      return new Response(
+        JSON.stringify({ error: "無效的認證令牌" }),
+        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
     const { 
       contentDirection,
       keywords, 
@@ -24,6 +52,58 @@ serve(async (req) => {
       additionalRequirements,
       brandInfo
     } = await req.json();
+
+    // Input validation
+    if (!keywords || typeof keywords !== "string") {
+      return new Response(
+        JSON.stringify({ error: "請提供關鍵字" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    if (keywords.length > 500) {
+      return new Response(
+        JSON.stringify({ error: "關鍵字不能超過 500 字元" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    if (textContent && textContent.length > 5000) {
+      return new Response(
+        JSON.stringify({ error: "文本內容不能超過 5000 字元" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    if (additionalRequirements && additionalRequirements.length > 1000) {
+      return new Response(
+        JSON.stringify({ error: "補充要求不能超過 1000 字元" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    // Check user's coin balance
+    const { data: userCoins, error: coinsError } = await supabase
+      .from("user_coins")
+      .select("balance")
+      .eq("user_id", user.id)
+      .single();
+
+    if (coinsError) {
+      console.error("Error fetching user coins:", coinsError);
+      return new Response(
+        JSON.stringify({ error: "無法獲取代幣餘額" }),
+        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    const COST_PER_GENERATION = 1; // Cost 1 coin per generation
+    if (!userCoins || userCoins.balance < COST_PER_GENERATION) {
+      return new Response(
+        JSON.stringify({ error: "代幣不足，請先購買代幣" }),
+        { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
     
     console.log("Generating content with params:", { 
       contentDirection, keywords, textContent, platform, tone, framework, 
@@ -147,6 +227,27 @@ ${additionalRequirements ? `補充要求：\n${additionalRequirements}` : ""}
     }
 
     console.log("Content generated successfully");
+
+    // Deduct coin from user's balance
+    const { error: deductError } = await supabase
+      .from("user_coins")
+      .update({ balance: userCoins.balance - COST_PER_GENERATION })
+      .eq("user_id", user.id);
+
+    if (deductError) {
+      console.error("Error deducting coins:", deductError);
+      // Continue anyway as content was generated
+    }
+
+    // Record transaction
+    await supabase
+      .from("coin_transactions")
+      .insert({
+        user_id: user.id,
+        amount: -COST_PER_GENERATION,
+        transaction_type: "content_generation",
+        description: `生成 ${platform} ${contentType}`,
+      });
 
     return new Response(
       JSON.stringify({ content: generatedContent }),
