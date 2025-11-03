@@ -184,6 +184,20 @@ export const ContentGenerator = () => {
         
         <div className="space-y-4">
           <div className="space-y-2">
+            <Label htmlFor="platform">發布平台</Label>
+            <Select value={platform} onValueChange={setPlatform}>
+              <SelectTrigger id="platform" className="bg-background/50">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Instagram">Instagram</SelectItem>
+                <SelectItem value="Facebook">Facebook</SelectItem>
+                <SelectItem value="Threads">Threads</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
             <Label>內容方向</Label>
             <div className="grid grid-cols-2 gap-3">
               {contentDirections.map((direction) => (
@@ -245,20 +259,6 @@ export const ContentGenerator = () => {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="platform">發布平台</Label>
-            <Select value={platform} onValueChange={setPlatform}>
-              <SelectTrigger id="platform" className="bg-background/50">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Instagram">Instagram</SelectItem>
-                <SelectItem value="Facebook">Facebook</SelectItem>
-                <SelectItem value="Threads">Threads</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="space-y-2">
             <Label htmlFor="tone">語調風格</Label>
             <Select value={tone} onValueChange={setTone}>
               <SelectTrigger id="tone" className="bg-background/50">
@@ -274,7 +274,7 @@ export const ContentGenerator = () => {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="framework">文案風格</Label>
+            <Label htmlFor="framework">文案輸出架構</Label>
             <Select value={framework} onValueChange={setFramework}>
               <SelectTrigger id="framework" className="bg-background/50">
                 <SelectValue />
@@ -297,10 +297,6 @@ export const ContentGenerator = () => {
                 <div className="text-sm">
                   <span className="font-semibold text-primary">框架對應：</span>
                   <span className="text-foreground">{frameworkInfo[framework].framework}</span>
-                </div>
-                <div className="text-sm">
-                  <span className="font-semibold text-primary">框架結構：</span>
-                  <span className="text-foreground">{frameworkInfo[framework].structure}</span>
                 </div>
                 <div className="text-sm">
                   <span className="font-semibold text-primary">案例說明：</span>
