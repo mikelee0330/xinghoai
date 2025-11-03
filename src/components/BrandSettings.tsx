@@ -8,6 +8,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
 import { Loader2, Plus, Trash2 } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { useTranslation } from "@/lib/i18n";
 
 interface BrandSetting {
   id: string;
@@ -19,6 +21,9 @@ interface BrandSetting {
 }
 
 export const BrandSettings = () => {
+  const { language } = useLanguage();
+  const t = useTranslation(language);
+  
   const [brands, setBrands] = useState<BrandSetting[]>([]);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);

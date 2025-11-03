@@ -10,6 +10,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { Sparkles, Loader2, Copy, Check, Trash2, Eye, Package, FileText, Video, Instagram, Facebook, Twitter, Music } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { useTranslation } from "@/lib/i18n";
 
 interface BrandSetting {
   id: string;
@@ -42,6 +44,9 @@ interface GenerationHistory {
 }
 
 export const ContentGenerator = () => {
+  const { language } = useLanguage();
+  const t = useTranslation(language);
+  
   const [contentDirection, setContentDirection] = useState("知識分享型");
   const [keywords, setKeywords] = useState("");
   const [textContent, setTextContent] = useState("");
@@ -403,18 +408,18 @@ export const ContentGenerator = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card className="p-6 bg-card/50 backdrop-blur-sm border-border/50">
           <h2 className="text-2xl font-bold mb-6 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-            內容生成設定
+            {t('contentGenerator')}
           </h2>
           
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="brand">選擇品牌</Label>
+              <Label htmlFor="brand">{t('selectBrand')}</Label>
               <Select value={selectedBrandId} onValueChange={setSelectedBrandId}>
                 <SelectTrigger id="brand" className="bg-background/50">
-                  <SelectValue placeholder="選擇品牌或不指定" />
+                  <SelectValue placeholder={t('selectBrand')} />
                 </SelectTrigger>
                 <SelectContent className="bg-popover z-50">
-                  <SelectItem value="none">不指定品牌</SelectItem>
+                  <SelectItem value="none">{t('noBrand')}</SelectItem>
                   {brands.map((brand) => (
                     <SelectItem key={brand.id} value={brand.id}>
                       <div className="flex items-center gap-2">
@@ -428,7 +433,7 @@ export const ContentGenerator = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="platform">發布平台</Label>
+              <Label htmlFor="platform">{t('platform')}</Label>
               <Select value={platform} onValueChange={setPlatform}>
                 <SelectTrigger id="platform" className="bg-background/50">
                   <SelectValue />
@@ -475,14 +480,14 @@ export const ContentGenerator = () => {
             </div>
 
             <div className="space-y-3">
-              <Label>內容類型</Label>
+              <Label>{t('contentType')}</Label>
               <RadioGroup value={contentType} onValueChange={setContentType}>
                 {platformContentTypes[platform]?.map((type) => (
                   <div key={type} className="flex items-center space-x-2">
                     <RadioGroupItem value={type} id={type} />
                     <Label htmlFor={type} className="cursor-pointer font-normal flex items-center gap-2">
                       {type === "貼文腳本" ? <FileText className="h-4 w-4" /> : <Video className="h-4 w-4" />}
-                      {type}
+                      {type === "貼文腳本" ? t('postScript') : t('videoScript')}
                     </Label>
                   </div>
                 ))}
@@ -523,7 +528,7 @@ export const ContentGenerator = () => {
             )}
 
             <div className="space-y-2">
-              <Label>內容方向</Label>
+              <Label>{t('contentDirection')}</Label>
               <div className="grid grid-cols-2 gap-3">
                 {contentDirections.map((direction) => (
                   <button
@@ -592,10 +597,10 @@ export const ContentGenerator = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="keywords">主題關鍵字</Label>
+              <Label htmlFor="keywords">{t('keywords')}</Label>
               <Textarea
                 id="keywords"
-                placeholder="例如：產品賣點: 高效保濕&#10;適用人群: 25-35歲女性"
+                placeholder={t('keywordsPlaceholder')}
                 value={keywords}
                 onChange={(e) => setKeywords(e.target.value)}
                 className="bg-background/50 min-h-[80px]"
@@ -744,7 +749,7 @@ export const ContentGenerator = () => {
       {/* History Section */}
       <Card className="p-6 bg-card/50 backdrop-blur-sm border-border/50">
         <h2 className="text-2xl font-bold mb-6 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-          生成歷史記錄
+          {t('generationHistory')}
         </h2>
         
         {history.length > 0 ? (
