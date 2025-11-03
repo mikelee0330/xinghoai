@@ -142,6 +142,8 @@ const Index = () => {
             {/* Subtitle */}
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-16 animate-fade-in" style={{ animationDelay: '0.2s' }}>
               {t('heroSubtitle')}
+              <br />
+              <span className="font-semibold text-primary">30 分鐘 搞定30天內容引流</span>
             </p>
 
             {/* Feature Cards */}
