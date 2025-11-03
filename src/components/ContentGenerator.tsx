@@ -13,11 +13,23 @@ export const ContentGenerator = () => {
   const [keywords, setKeywords] = useState("");
   const [platform, setPlatform] = useState("Instagram");
   const [tone, setTone] = useState("professional");
-  const [framework, setFramework] = useState("AIDA");
+  const [framework, setFramework] = useState("問題共鳴法");
   const [contentType, setContentType] = useState("post");
+  const [additionalRequirements, setAdditionalRequirements] = useState("");
   const [generatedContent, setGeneratedContent] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+
+  const keywordSuggestions = [
+    "產品賣點", "優惠活動", "適用人群", "用戶痛點", "適用場景",
+    "產品功效", "我的行業", "我的店舖", "突出關鍵詞", "商品帶貨",
+    "門店宣傳", "業務宣傳", "活動宣傳", "團購帶貨", "展示宣傳",
+    "店名", "城市"
+  ];
+
+  const handleKeywordSuggestionClick = (suggestion: string) => {
+    setKeywords((prev) => prev ? `${prev}、${suggestion}` : suggestion);
+  };
 
   const handleGenerate = async () => {
     if (!keywords.trim()) {
@@ -40,6 +52,7 @@ export const ContentGenerator = () => {
           tone,
           framework,
           contentType: contentType === "post" ? "貼文腳本" : "影片腳本",
+          additionalRequirements,
         },
       });
 
@@ -86,6 +99,20 @@ export const ContentGenerator = () => {
               onChange={(e) => setKeywords(e.target.value)}
               className="bg-background/50"
             />
+            <div className="flex flex-wrap gap-2 mt-2">
+              {keywordSuggestions.map((suggestion) => (
+                <Button
+                  key={suggestion}
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleKeywordSuggestionClick(suggestion)}
+                  className="text-xs"
+                >
+                  #{suggestion}
+                </Button>
+              ))}
+            </div>
           </div>
 
           <div className="space-y-2">
@@ -118,16 +145,22 @@ export const ContentGenerator = () => {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="framework">文案框架</Label>
+            <Label htmlFor="framework">文案框架（風格）</Label>
             <Select value={framework} onValueChange={setFramework}>
               <SelectTrigger id="framework" className="bg-background/50">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="AIDA">AIDA（注意→興趣→渴望→行動）</SelectItem>
-                <SelectItem value="PAS">PAS（問題→放大→解決）</SelectItem>
-                <SelectItem value="SCQA">SCQA（情境→衝突→問題→答案）</SelectItem>
-                <SelectItem value="3C">3C（清晰→簡潔→吸引人）</SelectItem>
+                <SelectItem value="問題共鳴法">問題共鳴法</SelectItem>
+                <SelectItem value="故事轉折法">故事轉折法</SelectItem>
+                <SelectItem value="限時優惠法">限時優惠法</SelectItem>
+                <SelectItem value="客戶見證法">客戶見證法</SelectItem>
+                <SelectItem value="專家背書法">專家背書法</SelectItem>
+                <SelectItem value="場景展示法">場景展示法</SelectItem>
+                <SelectItem value="數據支撐法">數據支撐法</SelectItem>
+                <SelectItem value="對比展示法">對比展示法</SelectItem>
+                <SelectItem value="互動促銷法">互動促銷法</SelectItem>
+                <SelectItem value="感情共鳴法">感情共鳴法</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -143,6 +176,17 @@ export const ContentGenerator = () => {
                 <SelectItem value="video">影片腳本</SelectItem>
               </SelectContent>
             </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="additionalRequirements">補充要求</Label>
+            <Textarea
+              id="additionalRequirements"
+              placeholder="請簡述您的補充要求"
+              value={additionalRequirements}
+              onChange={(e) => setAdditionalRequirements(e.target.value)}
+              className="bg-background/50 min-h-[100px]"
+            />
           </div>
 
           <Button
