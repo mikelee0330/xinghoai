@@ -5,7 +5,7 @@ import { ContentGenerator } from "@/components/ContentGenerator";
 import { BrandSettings } from "@/components/BrandSettings";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Sparkles, Zap, Target, Instagram, Facebook, Twitter } from "lucide-react";
+import { Sparkles, Zap, Target, Instagram, Facebook, X } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { UserProfileMenu } from "@/components/UserProfileMenu";
 import { NotificationBell } from "@/components/NotificationBell";
@@ -13,6 +13,8 @@ import { CoinsDialog } from "@/components/CoinsDialog";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useTranslation } from "@/lib/i18n";
 import mascotCat from "@/assets/mascot-cat-new.png";
+import threadsLogo from "@/assets/threads-logo.png";
+import xiaohongshuLogo from "@/assets/xiaohongshu-logo.png";
 
 const Index = () => {
   const [user, setUser] = useState(null);
@@ -171,14 +173,14 @@ const Index = () => {
               <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-600 via-pink-600 to-orange-500 flex items-center justify-center hover:scale-110 transition-transform shadow-lg">
                 <Instagram className="w-10 h-10 text-white" />
               </div>
-              <div className="w-16 h-16 rounded-2xl bg-black flex items-center justify-center hover:scale-110 transition-transform shadow-lg">
-                <span className="text-2xl font-bold text-white">Threads</span>
+              <div className="w-16 h-16 rounded-2xl bg-black flex items-center justify-center hover:scale-110 transition-transform shadow-lg p-3">
+                <img src={threadsLogo} alt="Threads" className="w-full h-full object-contain" />
               </div>
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-red-500 to-pink-500 flex items-center justify-center hover:scale-110 transition-transform shadow-lg">
-                <span className="text-2xl font-bold text-white">小紅書</span>
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-red-500 to-pink-500 flex items-center justify-center hover:scale-110 transition-transform shadow-lg p-3">
+                <img src={xiaohongshuLogo} alt="小紅書" className="w-full h-full object-contain" />
               </div>
               <div className="w-16 h-16 rounded-2xl bg-black flex items-center justify-center hover:scale-110 transition-transform shadow-lg">
-                <Twitter className="w-10 h-10 text-white" />
+                <X className="w-10 h-10 text-white" />
               </div>
             </div>
           </div>
