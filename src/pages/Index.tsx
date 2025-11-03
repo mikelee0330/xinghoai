@@ -7,9 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Sparkles, Zap, Target } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
-import { LanguageSwitcher } from "@/components/LanguageSwitcher";
-import { useLanguage } from "@/contexts/LanguageContext";
-import { useTranslation } from "@/lib/i18n";
 import { UserProfileMenu } from "@/components/UserProfileMenu";
 import { NotificationBell } from "@/components/NotificationBell";
 import { CoinsDialog } from "@/components/CoinsDialog";
@@ -82,7 +79,6 @@ const Index = () => {
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
           <div className="absolute top-8 right-8 flex items-center gap-3">
-            <LanguageSwitcher />
             {user ? (
               <>
                 <NotificationBell />

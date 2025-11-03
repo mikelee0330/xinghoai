@@ -1,4 +1,4 @@
-import { User, CreditCard, Users, Languages, LogOut, ChevronRight } from "lucide-react";
+import { User, CreditCard, Users, Languages, LogOut, Check } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -7,9 +7,13 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "@/hooks/use-toast";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface UserProfileMenuProps {
   user: any;
@@ -18,12 +22,23 @@ interface UserProfileMenuProps {
 }
 
 export const UserProfileMenu = ({ user, profile, onSignOut }: UserProfileMenuProps) => {
+  const { language, setLanguage } = useLanguage();
+  
   const handleComingSoon = (feature: string) => {
     toast({
       title: "尚未開放",
       description: `${feature}功能即將推出`,
     });
   };
+
+  const languages = [
+    { code: 'zh-TW', label: '繁體中文' },
+    { code: 'zh-CN', label: '简体中文' },
+    { code: 'en', label: 'English' },
+    { code: 'ja', label: '日本語' },
+  ];
+
+  const currentLanguageLabel = languages.find(lang => lang.code === language)?.label || '繁體中文';
 
   const displayName = profile?.display_name || user?.email?.split('@')[0] || '用戶';
   const initials = displayName.charAt(0).toUpperCase();
@@ -62,11 +77,25 @@ export const UserProfileMenu = ({ user, profile, onSignOut }: UserProfileMenuPro
           <span>邀請好友</span>
         </DropdownMenuItem>
         
-        <DropdownMenuItem onClick={() => handleComingSoon('語言')} className="cursor-pointer">
-          <Languages className="mr-2 h-4 w-4" />
-          <span>語言</span>
-          <ChevronRight className="ml-auto h-4 w-4" />
-        </DropdownMenuItem>
+        <DropdownMenuSub>
+          <DropdownMenuSubTrigger className="cursor-pointer">
+            <Languages className="mr-2 h-4 w-4" />
+            <span>語言</span>
+            <span className="ml-auto text-xs text-muted-foreground">{currentLanguageLabel}</span>
+          </DropdownMenuSubTrigger>
+          <DropdownMenuSubContent className="bg-background/95 backdrop-blur-sm border-border">
+            {languages.map((lang) => (
+              <DropdownMenuItem
+                key={lang.code}
+                onClick={() => setLanguage(lang.code as any)}
+                className="cursor-pointer"
+              >
+                <Check className={`mr-2 h-4 w-4 ${language === lang.code ? 'opacity-100' : 'opacity-0'}`} />
+                <span>{lang.label}</span>
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuSubContent>
+        </DropdownMenuSub>
         
         <DropdownMenuSeparator />
         
