@@ -7,8 +7,16 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Sparkles, Loader2, Copy, Check, Trash2, Eye } from "lucide-react";
+import { Sparkles, Loader2, Copy, Check, Trash2, Eye, Package } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+
+interface BrandSetting {
+  id: string;
+  brand_name: string;
+  brand_tone: string | null;
+  target_audience: string | null;
+  ai_analysis: string | null;
+}
 
 interface GenerationHistory {
   id: string;
@@ -25,6 +33,8 @@ interface GenerationHistory {
   wordCount?: string;
   videoLength?: string;
   additionalRequirements: string;
+  brandId?: string;
+  brandName?: string;
 }
 
 export const ContentGenerator = () => {
@@ -42,11 +52,31 @@ export const ContentGenerator = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
   const [history, setHistory] = useState<GenerationHistory[]>([]);
+  const [brands, setBrands] = useState<BrandSetting[]>([]);
+  const [selectedBrandId, setSelectedBrandId] = useState<string>("");
   const { toast } = useToast();
 
   useEffect(() => {
     loadHistory();
+    loadBrands();
   }, []);
+
+  const loadBrands = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
+    const { data, error } = await supabase
+      .from("brand_settings")
+      .select("id, brand_name, brand_tone, target_audience, ai_analysis")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error("Error loading brands:", error);
+    } else {
+      setBrands(data || []);
+    }
+  };
 
   const loadHistory = async () => {
     const { data: { user } } = await supabase.auth.getUser();
@@ -198,6 +228,7 @@ export const ContentGenerator = () => {
         tone,
         framework,
         generated_content: content,
+        brand_id: selectedBrandId || null,
       })
       .select()
       .single();
@@ -272,6 +303,20 @@ export const ContentGenerator = () => {
     setGeneratedContent("");
 
     try {
+      // Get brand info if selected
+      let brandInfo = null;
+      if (selectedBrandId) {
+        const brand = brands.find(b => b.id === selectedBrandId);
+        if (brand) {
+          brandInfo = {
+            name: brand.brand_name,
+            tone: brand.brand_tone,
+            audience: brand.target_audience,
+            analysis: brand.ai_analysis,
+          };
+        }
+      }
+
       const { data, error } = await supabase.functions.invoke("generate-content", {
         body: {
           contentDirection,
@@ -284,6 +329,7 @@ export const ContentGenerator = () => {
           wordCount: contentType === "post" ? wordCount : undefined,
           videoLength: contentType === "video" ? videoLength : undefined,
           additionalRequirements,
+          brandInfo,
         },
       });
 
@@ -323,6 +369,26 @@ export const ContentGenerator = () => {
           </h2>
           
           <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="brand">選擇品牌</Label>
+              <Select value={selectedBrandId} onValueChange={setSelectedBrandId}>
+                <SelectTrigger id="brand" className="bg-background/50">
+                  <SelectValue placeholder="選擇品牌或不指定" />
+                </SelectTrigger>
+                <SelectContent className="bg-popover z-50">
+                  <SelectItem value="">不指定品牌</SelectItem>
+                  {brands.map((brand) => (
+                    <SelectItem key={brand.id} value={brand.id}>
+                      <div className="flex items-center gap-2">
+                        <Package className="h-4 w-4" />
+                        {brand.brand_name}
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
             <div className="space-y-2">
               <Label htmlFor="platform">發布平台</Label>
               <Select value={platform} onValueChange={setPlatform}>

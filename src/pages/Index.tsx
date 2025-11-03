@@ -7,6 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LogOut, Sparkles, Zap, Target } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { useTranslation } from "@/lib/i18n";
 
 const Index = () => {
   const [user, setUser] = useState(null);
@@ -58,7 +61,8 @@ const Index = () => {
         }} />
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
-          <div className="absolute top-8 right-8">
+          <div className="absolute top-8 right-8 flex items-center gap-2">
+            <LanguageSwitcher />
             {user ? (
               <Button variant="outline" onClick={handleSignOut}>
                 <LogOut className="mr-2 h-4 w-4" />

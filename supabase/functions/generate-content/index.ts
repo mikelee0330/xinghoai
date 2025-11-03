@@ -21,12 +21,13 @@ serve(async (req) => {
       contentType,
       wordCount,
       videoLength,
-      additionalRequirements 
+      additionalRequirements,
+      brandInfo
     } = await req.json();
     
     console.log("Generating content with params:", { 
       contentDirection, keywords, textContent, platform, tone, framework, 
-      contentType, wordCount, videoLength, additionalRequirements 
+      contentType, wordCount, videoLength, additionalRequirements, hasBrandInfo: !!brandInfo 
     });
 
     // Map user-friendly framework names to professional frameworks
@@ -51,8 +52,23 @@ serve(async (req) => {
     }
 
     // Build system prompt for content generation
-    const systemPrompt = `你是一位專業的社群內容創作專家，擅長根據品牌調性和目標客群創作吸引人的社群貼文和影片腳本。
-請根據以下設定生成內容：
+    let systemPrompt = `你是一位專業的社群內容創作專家，擅長根據品牌調性和目標客群創作吸引人的社群貼文和影片腳本。`;
+    
+    // Add brand information if provided
+    if (brandInfo) {
+      systemPrompt += `\n\n【品牌資訊】
+品牌名稱：${brandInfo.name}
+品牌語調：${brandInfo.tone || '未指定'}
+目標受眾：${brandInfo.audience || '未指定'}`;
+      
+      if (brandInfo.analysis) {
+        systemPrompt += `\n品牌特性分析：\n${brandInfo.analysis}`;
+      }
+      
+      systemPrompt += `\n\n請確保生成的內容符合以上品牌特性，語調和風格與品牌一致。`;
+    }
+    
+    systemPrompt += `\n請根據以下設定生成內容：
 
 內容方向：${contentDirection}
 平台：${platform}
