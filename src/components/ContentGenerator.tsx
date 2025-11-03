@@ -239,6 +239,18 @@ export const ContentGenerator = () => {
   };
 
   const handleGenerate = async () => {
+    // Check if user is logged in
+    const { data: { user } } = await supabase.auth.getUser();
+    
+    if (!user) {
+      toast({
+        title: "請先登入",
+        description: "您需要登入才能使用內容生成功能",
+        variant: "destructive",
+      });
+      return;
+    }
+
     if (!keywords.trim()) {
       toast({
         title: "請輸入關鍵字",

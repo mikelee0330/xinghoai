@@ -188,6 +188,24 @@ export const BrandSettings = () => {
     setShowForm(false);
   };
 
+  const checkAuth = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    return !!user;
+  };
+
+  const handleNewBrand = async () => {
+    const isAuthenticated = await checkAuth();
+    if (!isAuthenticated) {
+      toast({
+        title: "請先登入",
+        description: "您需要登入才能建立品牌設定",
+        variant: "destructive",
+      });
+      return;
+    }
+    setShowForm(true);
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -196,7 +214,7 @@ export const BrandSettings = () => {
           <p className="text-muted-foreground">管理您的品牌語調、受眾屬性和語系設定</p>
         </div>
         {!showForm && (
-          <Button onClick={() => setShowForm(true)}>
+          <Button onClick={handleNewBrand}>
             <Plus className="mr-2 h-4 w-4" />
             新增品牌
           </Button>

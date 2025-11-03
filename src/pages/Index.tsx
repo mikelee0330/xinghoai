@@ -16,25 +16,17 @@ const Index = () => {
   useEffect(() => {
     // Check if user is logged in
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session?.user) {
-        setUser(session.user);
-      } else {
-        navigate("/auth");
-      }
+      setUser(session?.user || null);
       setLoading(false);
     });
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (session?.user) {
-        setUser(session.user);
-      } else {
-        navigate("/auth");
-      }
+      setUser(session?.user || null);
     });
 
     return () => subscription.unsubscribe();
-  }, [navigate]);
+  }, []);
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
@@ -67,10 +59,16 @@ const Index = () => {
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
           <div className="absolute top-8 right-8">
-            <Button variant="outline" onClick={handleSignOut}>
-              <LogOut className="mr-2 h-4 w-4" />
-              登出
-            </Button>
+            {user ? (
+              <Button variant="outline" onClick={handleSignOut}>
+                <LogOut className="mr-2 h-4 w-4" />
+                登出
+              </Button>
+            ) : (
+              <Button variant="default" onClick={() => navigate("/auth")}>
+                登入
+              </Button>
+            )}
           </div>
 
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-8 backdrop-blur-sm">
