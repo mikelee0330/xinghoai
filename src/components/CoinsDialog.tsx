@@ -37,10 +37,13 @@ export const CoinsDialog = ({ userId }: CoinsDialogProps) => {
   const [consecutiveDays, setConsecutiveDays] = useState(0);
   const [loading, setLoading] = useState(false);
   const [canCheckIn, setCanCheckIn] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    loadCoinsData();
-  }, [userId]);
+    if (isOpen) {
+      loadCoinsData();
+    }
+  }, [userId, isOpen]);
 
   const loadCoinsData = async () => {
     try {
@@ -168,7 +171,7 @@ export const CoinsDialog = ({ userId }: CoinsDialogProps) => {
   };
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button variant="ghost" size="sm" className="gap-1">
           <Coins className="h-5 w-5 text-yellow-500" />
