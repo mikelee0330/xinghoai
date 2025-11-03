@@ -5,7 +5,7 @@ import { ContentGenerator } from "@/components/ContentGenerator";
 import { BrandSettings } from "@/components/BrandSettings";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Sparkles, Zap, Target } from "lucide-react";
+import { Sparkles, Zap, Target, Clock } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { UserProfileMenu } from "@/components/UserProfileMenu";
 import { NotificationBell } from "@/components/NotificationBell";
@@ -96,22 +96,46 @@ const Index = () => {
             )}
           </div>
 
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-8 backdrop-blur-sm">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-8 backdrop-blur-sm animate-fade-in">
             <Sparkles className="h-4 w-4 text-primary" />
             <span className="text-sm font-medium text-primary">{t('aiPlatformTag')}</span>
           </div>
           
-          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-foreground via-primary to-secondary bg-clip-text text-transparent leading-tight">
-            {t('heroTitle')}
-          </h1>
+          {/* New Time + Main Title Section */}
+          <div className="mb-6 animate-fade-in" style={{ animationDelay: '0.1s' }}>
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <div className="flex items-center gap-2 text-4xl sm:text-5xl font-bold">
+                <Clock className="h-10 w-10 text-primary animate-pulse" />
+                <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                  {t('heroTimeTag')}
+                </span>
+              </div>
+            </div>
+            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold bg-gradient-to-r from-foreground via-primary to-secondary bg-clip-text text-transparent leading-tight">
+              {t('heroMainTitle')}
+            </h1>
+          </div>
+
+          {/* Feature Tags */}
+          <div className="flex flex-wrap items-center justify-center gap-3 mb-8 animate-fade-in" style={{ animationDelay: '0.2s' }}>
+            <div className="px-6 py-2 rounded-full bg-gradient-to-r from-primary to-primary-glow text-primary-foreground font-medium shadow-lg hover:scale-105 transition-transform">
+              {t('featureAI')}
+            </div>
+            <div className="px-6 py-2 rounded-full bg-gradient-to-r from-secondary to-secondary/70 text-secondary-foreground font-medium shadow-lg hover:scale-105 transition-transform">
+              {t('featureAuto')}
+            </div>
+            <div className="px-6 py-2 rounded-full bg-gradient-to-r from-primary to-secondary text-primary-foreground font-medium shadow-lg hover:scale-105 transition-transform">
+              {t('featureMulti')}
+            </div>
+          </div>
           
-          <p className="text-xl sm:text-2xl text-muted-foreground mb-12 max-w-3xl mx-auto">
+          <p className="text-xl sm:text-2xl text-muted-foreground mb-12 max-w-3xl mx-auto animate-fade-in" style={{ animationDelay: '0.3s' }}>
             {t('heroSubtitle')}
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto mb-8">
-            <div className="p-6 rounded-2xl bg-card/30 backdrop-blur-sm border border-border/50 hover:border-primary/50 transition-all">
-              <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center mb-4 mx-auto">
+            <div className="p-6 rounded-2xl bg-card/30 backdrop-blur-sm border border-border/50 hover:border-primary/50 transition-all hover:scale-105 hover:shadow-xl animate-fade-in" style={{ animationDelay: '0.4s' }}>
+              <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center mb-4 mx-auto animate-pulse">
                 <Sparkles className="h-6 w-6 text-primary-foreground" />
               </div>
               <h3 className="text-lg font-semibold mb-2">{t('smartGeneration')}</h3>
@@ -120,8 +144,8 @@ const Index = () => {
               </p>
             </div>
 
-            <div className="p-6 rounded-2xl bg-card/30 backdrop-blur-sm border border-border/50 hover:border-secondary/50 transition-all">
-              <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-secondary to-secondary/70 flex items-center justify-center mb-4 mx-auto">
+            <div className="p-6 rounded-2xl bg-card/30 backdrop-blur-sm border border-border/50 hover:border-secondary/50 transition-all hover:scale-105 hover:shadow-xl animate-fade-in" style={{ animationDelay: '0.5s' }}>
+              <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-secondary to-secondary/70 flex items-center justify-center mb-4 mx-auto animate-pulse" style={{ animationDelay: '0.5s' }}>
                 <Zap className="h-6 w-6 text-secondary-foreground" />
               </div>
               <h3 className="text-lg font-semibold mb-2">{t('multiPlatform')}</h3>
@@ -130,8 +154,8 @@ const Index = () => {
               </p>
             </div>
 
-            <div className="p-6 rounded-2xl bg-card/30 backdrop-blur-sm border border-border/50 hover:border-primary/50 transition-all">
-              <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center mb-4 mx-auto">
+            <div className="p-6 rounded-2xl bg-card/30 backdrop-blur-sm border border-border/50 hover:border-primary/50 transition-all hover:scale-105 hover:shadow-xl animate-fade-in" style={{ animationDelay: '0.6s' }}>
+              <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center mb-4 mx-auto animate-pulse" style={{ animationDelay: '1s' }}>
                 <Target className="h-6 w-6 text-primary-foreground" />
               </div>
               <h3 className="text-lg font-semibold mb-2">{t('preciseFramework')}</h3>

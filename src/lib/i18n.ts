@@ -115,8 +115,12 @@ export const translations = {
     
     // Hero Section
     aiPlatformTag: 'AI 驅動的內容創作平台',
-    heroTitle: '星火 AI 內容平台',
-    heroSubtitle: '一鍵生成專業社群內容，讓創作變得更簡單',
+    heroTimeTag: '⏱️ 5 分鐘',
+    heroMainTitle: '創造 7 天爆款內容',
+    heroSubtitle: '運用 AI 智能生成，快速打造專業社群內容矩陣',
+    featureAI: 'AI 智能',
+    featureAuto: '自動生成',
+    featureMulti: '多平台',
     smartGeneration: '智能生成',
     smartGenerationDesc: 'AI 自動生成符合品牌調性的專業內容',
     multiPlatform: '多平台適配',
@@ -242,12 +246,16 @@ export const translations = {
     
     // Hero Section
     aiPlatformTag: 'AI 驱动的内容创作平台',
-    heroTitle: '星火 AI 内容平台',
-    heroSubtitle: '一键生成专业社群内容，让创作变得更简单',
+    heroTimeTag: '⏱️ 5 分钟',
+    heroMainTitle: '创造 7 天爆款内容',
+    heroSubtitle: '运用 AI 智能生成，快速打造专业社群内容矩阵',
+    featureAI: 'AI 智能',
+    featureAuto: '自动生成',
+    featureMulti: '多平台',
     smartGeneration: '智能生成',
     smartGenerationDesc: 'AI 自动生成符合品牌调性的专业内容',
     multiPlatform: '多平台适配',
-    multiPlatformDesc: '支援 Instagram、Facebook、Threads 等平台',
+    multiPlatformDesc: '支持 Instagram、Facebook、Threads 等平台',
     preciseFramework: '精准框架',
     preciseFrameworkDesc: '提供 AIDA、PAS、SCQA 等专业文案框架',
     
@@ -369,8 +377,12 @@ export const translations = {
     
     // Hero Section
     aiPlatformTag: 'AI-Powered Content Creation Platform',
-    heroTitle: 'Xinghuo AI Content Platform',
-    heroSubtitle: 'Generate professional social media content with one click',
+    heroTimeTag: '⏱️ 5 Minutes',
+    heroMainTitle: 'Create 7 Days of Viral Content',
+    heroSubtitle: 'Use AI intelligence to quickly build a professional social content matrix',
+    featureAI: 'AI Smart',
+    featureAuto: 'Auto Generate',
+    featureMulti: 'Multi-Platform',
     smartGeneration: 'Smart Generation',
     smartGenerationDesc: 'AI automatically generates professional content that matches your brand tone',
     multiPlatform: 'Multi-Platform',
@@ -496,8 +508,12 @@ export const translations = {
     
     // Hero Section
     aiPlatformTag: 'AI駆動のコンテンツ創作プラットフォーム',
-    heroTitle: '星火 AI コンテンツプラットフォーム',
-    heroSubtitle: 'ワンクリックでプロフェッショナルなSNSコンテンツを生成',
+    heroTimeTag: '⏱️ 5 分',
+    heroMainTitle: '7 日間のバイラルコンテンツを作成',
+    heroSubtitle: 'AIインテリジェンスを使用して、プロフェッショナルなソーシャルコンテンツマトリックスを迅速に構築',
+    featureAI: 'AIスマート',
+    featureAuto: '自動生成',
+    featureMulti: 'マルチプラットフォーム',
     smartGeneration: 'スマート生成',
     smartGenerationDesc: 'AIがブランドトーンに合わせたプロフェッショナルなコンテンツを自動生成',
     multiPlatform: 'マルチプラットフォーム',
