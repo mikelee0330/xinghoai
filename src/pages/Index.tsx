@@ -98,15 +98,15 @@ const Index = () => {
 
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-8 backdrop-blur-sm">
             <Sparkles className="h-4 w-4 text-primary" />
-            <span className="text-sm font-medium text-primary">AI 驅動的內容創作平台</span>
+            <span className="text-sm font-medium text-primary">{t('aiPlatformTag')}</span>
           </div>
           
           <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-foreground via-primary to-secondary bg-clip-text text-transparent leading-tight">
-            星火 AI 內容平台
+            {t('heroTitle')}
           </h1>
           
           <p className="text-xl sm:text-2xl text-muted-foreground mb-12 max-w-3xl mx-auto">
-            一鍵生成專業社群內容，讓創作變得更簡單
+            {t('heroSubtitle')}
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto mb-8">
@@ -114,9 +114,9 @@ const Index = () => {
               <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center mb-4 mx-auto">
                 <Sparkles className="h-6 w-6 text-primary-foreground" />
               </div>
-              <h3 className="text-lg font-semibold mb-2">智能生成</h3>
+              <h3 className="text-lg font-semibold mb-2">{t('smartGeneration')}</h3>
               <p className="text-sm text-muted-foreground">
-                AI 自動生成符合品牌調性的專業內容
+                {t('smartGenerationDesc')}
               </p>
             </div>
 
@@ -124,9 +124,9 @@ const Index = () => {
               <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-secondary to-secondary/70 flex items-center justify-center mb-4 mx-auto">
                 <Zap className="h-6 w-6 text-secondary-foreground" />
               </div>
-              <h3 className="text-lg font-semibold mb-2">多平台適配</h3>
+              <h3 className="text-lg font-semibold mb-2">{t('multiPlatform')}</h3>
               <p className="text-sm text-muted-foreground">
-                支援 Instagram、Facebook、Threads 等平台
+                {t('multiPlatformDesc')}
               </p>
             </div>
 
@@ -134,9 +134,9 @@ const Index = () => {
               <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center mb-4 mx-auto">
                 <Target className="h-6 w-6 text-primary-foreground" />
               </div>
-              <h3 className="text-lg font-semibold mb-2">精準框架</h3>
+              <h3 className="text-lg font-semibold mb-2">{t('preciseFramework')}</h3>
               <p className="text-sm text-muted-foreground">
-                提供 AIDA、PAS、SCQA 等專業文案框架
+                {t('preciseFrameworkDesc')}
               </p>
             </div>
           </div>

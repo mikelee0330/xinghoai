@@ -113,8 +113,19 @@ export const translations = {
     success: '成功',
     loading: '載入中...',
     
+    // Hero Section
+    aiPlatformTag: 'AI 驅動的內容創作平台',
+    heroTitle: '星火 AI 內容平台',
+    heroSubtitle: '一鍵生成專業社群內容，讓創作變得更簡單',
+    smartGeneration: '智能生成',
+    smartGenerationDesc: 'AI 自動生成符合品牌調性的專業內容',
+    multiPlatform: '多平台適配',
+    multiPlatformDesc: '支援 Instagram、Facebook、Threads 等平台',
+    preciseFramework: '精準框架',
+    preciseFrameworkDesc: '提供 AIDA、PAS、SCQA 等專業文案框架',
+    
     // Footer
-    copyright: '© 2024 星火 AI 內容平台。保留所有權利。',
+    copyright: '© 2025 星火 AI 內容平台 - 讓創作更簡單，讓內容更出色',
   },
   
   '简体中文': {
@@ -229,8 +240,19 @@ export const translations = {
     success: '成功',
     loading: '载入中...',
     
+    // Hero Section
+    aiPlatformTag: 'AI 驱动的内容创作平台',
+    heroTitle: '星火 AI 内容平台',
+    heroSubtitle: '一键生成专业社群内容，让创作变得更简单',
+    smartGeneration: '智能生成',
+    smartGenerationDesc: 'AI 自动生成符合品牌调性的专业内容',
+    multiPlatform: '多平台适配',
+    multiPlatformDesc: '支援 Instagram、Facebook、Threads 等平台',
+    preciseFramework: '精准框架',
+    preciseFrameworkDesc: '提供 AIDA、PAS、SCQA 等专业文案框架',
+    
     // Footer
-    copyright: '© 2024 星火 AI 内容平台。保留所有权利。',
+    copyright: '© 2025 星火 AI 内容平台 - 让创作更简单，让内容更出色',
   },
   
   'English': {
@@ -345,8 +367,19 @@ export const translations = {
     success: 'Success',
     loading: 'Loading...',
     
+    // Hero Section
+    aiPlatformTag: 'AI-Powered Content Creation Platform',
+    heroTitle: 'Xinghuo AI Content Platform',
+    heroSubtitle: 'Generate professional social media content with one click',
+    smartGeneration: 'Smart Generation',
+    smartGenerationDesc: 'AI automatically generates professional content that matches your brand tone',
+    multiPlatform: 'Multi-Platform',
+    multiPlatformDesc: 'Supports Instagram, Facebook, Threads and more',
+    preciseFramework: 'Precise Framework',
+    preciseFrameworkDesc: 'Provides professional copywriting frameworks like AIDA, PAS, SCQA',
+    
     // Footer
-    copyright: '© 2024 Xinghuo AI Content Platform. All rights reserved.',
+    copyright: '© 2025 Xinghuo AI Content Platform - Make content creation easier',
   },
   
   '日本語': {
@@ -461,8 +494,19 @@ export const translations = {
     success: '成功',
     loading: '読み込み中...',
     
+    // Hero Section
+    aiPlatformTag: 'AI駆動のコンテンツ創作プラットフォーム',
+    heroTitle: '星火 AI コンテンツプラットフォーム',
+    heroSubtitle: 'ワンクリックでプロフェッショナルなSNSコンテンツを生成',
+    smartGeneration: 'スマート生成',
+    smartGenerationDesc: 'AIがブランドトーンに合わせたプロフェッショナルなコンテンツを自動生成',
+    multiPlatform: 'マルチプラットフォーム',
+    multiPlatformDesc: 'Instagram、Facebook、Threadsなどをサポート',
+    preciseFramework: '精密なフレームワーク',
+    preciseFrameworkDesc: 'AIDA、PAS、SCQAなどのプロフェッショナルなコピーライティングフレームワークを提供',
+    
     // Footer
-    copyright: '© 2024 星火AIコンテンツプラットフォーム。全著作権所有。',
+    copyright: '© 2025 星火AIコンテンツプラットフォーム - より簡単に、より優れたコンテンツを',
   },
 };
 
