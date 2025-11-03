@@ -5,14 +5,18 @@ import { ContentGenerator } from "@/components/ContentGenerator";
 import { BrandSettings } from "@/components/BrandSettings";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { LogOut, Sparkles, Zap, Target } from "lucide-react";
+import { Sparkles, Zap, Target } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useTranslation } from "@/lib/i18n";
+import { UserProfileMenu } from "@/components/UserProfileMenu";
+import { NotificationBell } from "@/components/NotificationBell";
+import { CoinsDialog } from "@/components/CoinsDialog";
 
 const Index = () => {
   const [user, setUser] = useState(null);
+  const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -20,16 +24,32 @@ const Index = () => {
     // Check if user is logged in
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user || null);
+      if (session?.user) {
+        loadProfile(session.user.id);
+      }
       setLoading(false);
     });
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setUser(session?.user || null);
+      if (session?.user) {
+        loadProfile(session.user.id);
+      }
     });
 
     return () => subscription.unsubscribe();
   }, []);
+
+  const loadProfile = async (userId: string) => {
+    const { data } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('user_id', userId)
+      .single();
+    
+    if (data) setProfile(data);
+  };
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
@@ -61,13 +81,14 @@ const Index = () => {
         }} />
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
-          <div className="absolute top-8 right-8 flex items-center gap-2">
+          <div className="absolute top-8 right-8 flex items-center gap-3">
             <LanguageSwitcher />
             {user ? (
-              <Button variant="outline" onClick={handleSignOut}>
-                <LogOut className="mr-2 h-4 w-4" />
-                登出
-              </Button>
+              <>
+                <NotificationBell />
+                <CoinsDialog userId={user.id} />
+                <UserProfileMenu user={user} profile={profile} onSignOut={handleSignOut} />
+              </>
             ) : (
               <Button variant="default" onClick={() => navigate("/auth")}>
                 登入
