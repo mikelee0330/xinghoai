@@ -10,12 +10,16 @@ import { toast } from "@/hooks/use-toast";
 import { UserProfileMenu } from "@/components/UserProfileMenu";
 import { NotificationBell } from "@/components/NotificationBell";
 import { CoinsDialog } from "@/components/CoinsDialog";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { useTranslation } from "@/lib/i18n";
 
 const Index = () => {
   const [user, setUser] = useState(null);
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const { language } = useLanguage();
+  const t = useTranslation(language);
 
   useEffect(() => {
     // Check if user is logged in
@@ -51,7 +55,7 @@ const Index = () => {
   const handleSignOut = async () => {
     await supabase.auth.signOut();
     toast({
-      title: "已登出",
+      title: t('logout'),
       description: "期待下次見到您！",
     });
     navigate("/auth");
@@ -62,7 +66,7 @@ const Index = () => {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-4 text-muted-foreground">載入中...</p>
+          <p className="mt-4 text-muted-foreground">{t('loading')}</p>
         </div>
       </div>
     );
@@ -87,7 +91,7 @@ const Index = () => {
               </>
             ) : (
               <Button variant="default" onClick={() => navigate("/auth")}>
-                登入
+                {t('login')}
               </Button>
             )}
           </div>
@@ -143,8 +147,8 @@ const Index = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <Tabs defaultValue="generator" className="w-full">
           <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 mb-8">
-            <TabsTrigger value="generator">內容生成</TabsTrigger>
-            <TabsTrigger value="brand">品牌設定</TabsTrigger>
+            <TabsTrigger value="generator">{t('contentGeneratorTab')}</TabsTrigger>
+            <TabsTrigger value="brand">{t('brandSettingsTab')}</TabsTrigger>
           </TabsList>
           
           <TabsContent value="generator">
@@ -160,7 +164,7 @@ const Index = () => {
       {/* Footer */}
       <div className="border-t border-border/50 mt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center text-sm text-muted-foreground">
-          <p>© 2025 星火 AI 內容平台 - 讓創作更簡單，讓內容更出色</p>
+          <p>{t('copyright')}</p>
         </div>
       </div>
     </div>

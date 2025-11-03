@@ -14,6 +14,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { toast } from "@/hooks/use-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useTranslation } from "@/lib/i18n";
 
 interface UserProfileMenuProps {
   user: any;
@@ -23,22 +24,55 @@ interface UserProfileMenuProps {
 
 export const UserProfileMenu = ({ user, profile, onSignOut }: UserProfileMenuProps) => {
   const { language, setLanguage } = useLanguage();
+  const t = useTranslation(language);
   
   const handleComingSoon = (feature: string) => {
     toast({
-      title: "尚未開放",
-      description: `${feature}功能即將推出`,
+      title: language === '繁體中文' ? "尚未開放" : language === '简体中文' ? "尚未开放" : language === 'English' ? "Coming Soon" : "近日公開",
+      description: `${feature}${language === 'English' ? ' feature coming soon' : language === '日本語' ? '機能は近日公開' : '功能即將推出'}`,
     });
   };
 
   const languages = [
-    { code: 'zh-TW', label: '繁體中文' },
-    { code: 'zh-CN', label: '简体中文' },
-    { code: 'en', label: 'English' },
-    { code: 'ja', label: '日本語' },
+    { code: '繁體中文' as const, label: '繁體中文' },
+    { code: '简体中文' as const, label: '简体中文' },
+    { code: 'English' as const, label: 'English' },
+    { code: '日本語' as const, label: '日本語' },
   ];
 
-  const currentLanguageLabel = languages.find(lang => lang.code === language)?.label || '繁體中文';
+  const menuLabels = {
+    '繁體中文': {
+      personalInfo: '個人資料',
+      subscription: '訂閱',
+      inviteFriends: '邀請好友',
+      language: '語言',
+      logout: '登出',
+    },
+    '简体中文': {
+      personalInfo: '个人资料',
+      subscription: '订阅',
+      inviteFriends: '邀请好友',
+      language: '语言',
+      logout: '登出',
+    },
+    'English': {
+      personalInfo: 'Personal Info',
+      subscription: 'Subscription',
+      inviteFriends: 'Invite Friends',
+      language: 'Language',
+      logout: 'Logout',
+    },
+    '日本語': {
+      personalInfo: '個人情報',
+      subscription: 'サブスクリプション',
+      inviteFriends: '友達を招待',
+      language: '言語',
+      logout: 'ログアウト',
+    },
+  };
+
+  const currentLanguageLabel = language;
+  const labels = menuLabels[language];
 
   const displayName = profile?.display_name || user?.email?.split('@')[0] || '用戶';
   const initials = displayName.charAt(0).toUpperCase();
@@ -61,33 +95,33 @@ export const UserProfileMenu = ({ user, profile, onSignOut }: UserProfileMenuPro
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         
-        <DropdownMenuItem onClick={() => handleComingSoon('個人資料')} className="cursor-pointer">
+        <DropdownMenuItem onClick={() => handleComingSoon(labels.personalInfo)} className="cursor-pointer">
           <User className="mr-2 h-4 w-4" />
-          <span>個人資料</span>
+          <span>{labels.personalInfo}</span>
         </DropdownMenuItem>
         
-        <DropdownMenuItem onClick={() => handleComingSoon('訂閱')} className="cursor-pointer">
+        <DropdownMenuItem onClick={() => handleComingSoon(labels.subscription)} className="cursor-pointer">
           <CreditCard className="mr-2 h-4 w-4" />
-          <span>訂閱</span>
+          <span>{labels.subscription}</span>
           <Badge variant="secondary" className="ml-auto text-xs">Pro Trial</Badge>
         </DropdownMenuItem>
         
-        <DropdownMenuItem onClick={() => handleComingSoon('邀請好友')} className="cursor-pointer">
+        <DropdownMenuItem onClick={() => handleComingSoon(labels.inviteFriends)} className="cursor-pointer">
           <Users className="mr-2 h-4 w-4" />
-          <span>邀請好友</span>
+          <span>{labels.inviteFriends}</span>
         </DropdownMenuItem>
         
         <DropdownMenuSub>
           <DropdownMenuSubTrigger className="cursor-pointer">
             <Languages className="mr-2 h-4 w-4" />
-            <span>語言</span>
+            <span>{labels.language}</span>
             <span className="ml-auto text-xs text-muted-foreground">{currentLanguageLabel}</span>
           </DropdownMenuSubTrigger>
           <DropdownMenuSubContent className="bg-background/95 backdrop-blur-sm border-border">
             {languages.map((lang) => (
               <DropdownMenuItem
                 key={lang.code}
-                onClick={() => setLanguage(lang.code as any)}
+                onClick={() => setLanguage(lang.code)}
                 className="cursor-pointer"
               >
                 <Check className={`mr-2 h-4 w-4 ${language === lang.code ? 'opacity-100' : 'opacity-0'}`} />
@@ -101,7 +135,7 @@ export const UserProfileMenu = ({ user, profile, onSignOut }: UserProfileMenuPro
         
         <DropdownMenuItem onClick={onSignOut} className="cursor-pointer text-destructive focus:text-destructive">
           <LogOut className="mr-2 h-4 w-4" />
-          <span>登出</span>
+          <span>{labels.logout}</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
