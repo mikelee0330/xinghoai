@@ -661,70 +661,94 @@ export const ContentGenerator = () => {
                         詳細
                       </Button>
                     </DialogTrigger>
-                    <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
-                      <DialogHeader>
-                        <DialogTitle>生成詳細資訊</DialogTitle>
+                    <DialogContent className="max-w-4xl max-h-[85vh] overflow-hidden flex flex-col">
+                      <DialogHeader className="border-b pb-4">
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <DialogTitle className="text-2xl font-bold mb-2">{item.title}</DialogTitle>
+                            <div className="flex gap-2">
+                              <span className="inline-block px-3 py-1 bg-primary/10 rounded-full text-primary text-sm font-medium">
+                                {item.contentType}
+                              </span>
+                              <span className="inline-block px-3 py-1 bg-secondary/10 rounded-full text-secondary text-sm font-medium">
+                                {item.platform}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
                       </DialogHeader>
-                      <div className="space-y-4">
-                        <div>
-                          <Label className="text-muted-foreground">生成日期</Label>
-                          <p className="mt-1">{new Date(item.date).toLocaleString('zh-TW')}</p>
-                        </div>
-                        <div>
-                          <Label className="text-muted-foreground">發布平台</Label>
-                          <p className="mt-1">{item.platform}</p>
-                        </div>
-                        <div>
-                          <Label className="text-muted-foreground">內容方向</Label>
-                          <p className="mt-1">{item.contentDirection}</p>
-                        </div>
-                        <div>
-                          <Label className="text-muted-foreground">文案輸出架構</Label>
-                          <p className="mt-1">{item.framework}</p>
-                        </div>
-                        <div>
-                          <Label className="text-muted-foreground">主題關鍵字</Label>
-                          <p className="mt-1 whitespace-pre-wrap">{item.keywords}</p>
-                        </div>
-                        {item.textContent && (
-                          <div>
-                            <Label className="text-muted-foreground">文本內容</Label>
-                            <p className="mt-1 whitespace-pre-wrap">{item.textContent}</p>
+                      
+                      <div className="flex-1 overflow-y-auto pr-2">
+                        <div className="space-y-6 py-4">
+                          {/* Metadata Grid */}
+                          <div className="grid grid-cols-2 gap-4 p-4 bg-muted/30 rounded-lg">
+                            <div>
+                              <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">生成日期</Label>
+                              <p className="mt-1 text-sm font-medium">{new Date(item.date).toLocaleString('zh-TW')}</p>
+                            </div>
+                            <div>
+                              <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">內容方向</Label>
+                              <p className="mt-1 text-sm font-medium">{item.contentDirection}</p>
+                            </div>
+                            <div>
+                              <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">文案架構</Label>
+                              <p className="mt-1 text-sm font-medium">{item.framework}</p>
+                            </div>
+                            <div>
+                              <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">語調風格</Label>
+                              <p className="mt-1 text-sm font-medium">{item.tone}</p>
+                            </div>
                           </div>
-                        )}
-                        <div>
-                          <Label className="text-muted-foreground">語調風格</Label>
-                          <p className="mt-1">{item.tone}</p>
-                        </div>
-                        <div>
-                          <Label className="text-muted-foreground">內容類型</Label>
-                          <p className="mt-1">{item.contentType}</p>
-                        </div>
-                        {item.wordCount && (
-                          <div>
-                            <Label className="text-muted-foreground">字數</Label>
-                            <p className="mt-1">{item.wordCount}</p>
+
+                          {/* Keywords */}
+                          <div className="p-4 bg-background border rounded-lg">
+                            <Label className="text-sm font-semibold text-foreground mb-2 block">主題關鍵字</Label>
+                            <p className="text-sm whitespace-pre-wrap text-muted-foreground">{item.keywords}</p>
                           </div>
-                        )}
-                        {item.videoLength && (
-                          <div>
-                            <Label className="text-muted-foreground">影片長度</Label>
-                            <p className="mt-1">{item.videoLength}</p>
+
+                          {/* Generated Content */}
+                          <div className="space-y-3">
+                            <div className="flex items-center justify-between">
+                              <Label className="text-sm font-semibold text-foreground">生成內容</Label>
+                              <Button
+                                onClick={async () => {
+                                  await copyHistoryContent(item.content);
+                                }}
+                                variant="outline"
+                                size="sm"
+                                className="gap-2"
+                              >
+                                <Copy className="h-4 w-4" />
+                                複製全文
+                              </Button>
+                            </div>
+                            <div className="p-4 bg-gradient-to-br from-background to-muted/20 border rounded-lg">
+                              <div className="space-y-3">
+                                {(() => {
+                                  const lines = item.content.split('\n');
+                                  const title = lines[0] || "";
+                                  const content = lines.slice(1).join('\n').trim();
+                                  
+                                  return (
+                                    <>
+                                      {title && (
+                                        <div>
+                                          <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2 block">標題</Label>
+                                          <p className="text-lg font-bold text-foreground">{title}</p>
+                                        </div>
+                                      )}
+                                      {content && (
+                                        <div>
+                                          <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2 block">內容</Label>
+                                          <p className="text-sm text-foreground whitespace-pre-wrap leading-relaxed">{content}</p>
+                                        </div>
+                                      )}
+                                    </>
+                                  );
+                                })()}
+                              </div>
+                            </div>
                           </div>
-                        )}
-                        {item.additionalRequirements && (
-                          <div>
-                            <Label className="text-muted-foreground">補充要求</Label>
-                            <p className="mt-1 whitespace-pre-wrap">{item.additionalRequirements}</p>
-                          </div>
-                        )}
-                        <div>
-                          <Label className="text-muted-foreground">生成內容</Label>
-                          <Textarea
-                            value={item.content}
-                            readOnly
-                            className="mt-1 min-h-[200px] bg-background/50 font-mono text-sm"
-                          />
                         </div>
                       </div>
                     </DialogContent>
