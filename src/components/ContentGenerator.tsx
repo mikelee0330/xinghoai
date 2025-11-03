@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Sparkles, Loader2 } from "lucide-react";
+import { Sparkles, Loader2, Copy, Check } from "lucide-react";
 
 export const ContentGenerator = () => {
   const [contentDirection, setContentDirection] = useState("知識分享型");
@@ -22,7 +22,61 @@ export const ContentGenerator = () => {
   const [additionalRequirements, setAdditionalRequirements] = useState("");
   const [generatedContent, setGeneratedContent] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isCopied, setIsCopied] = useState(false);
   const { toast } = useToast();
+
+  const frameworkInfo: Record<string, { framework: string; structure: string; description: string }> = {
+    "問題共鳴法": {
+      framework: "PAS（Problem → Agitate → Solve）",
+      structure: "Problem → Agitate → Solve",
+      description: "開場抓痛點、放大情緒、給出解方"
+    },
+    "故事轉折法": {
+      framework: "SCQA（Situation → Complication → Question → Answer）",
+      structure: "Situation → Complication → Question → Answer",
+      description: "用故事鋪陳、反轉、最後揭示解答"
+    },
+    "限時優惠法": {
+      framework: "AIDA（Attention → Interest → Desire → Action）",
+      structure: "Attention → Interest → Desire → Action",
+      description: "抓眼球、挑慾望、促行動"
+    },
+    "客戶見證法": {
+      framework: "BAB（Before → After → Bridge）",
+      structure: "Before → After → Bridge",
+      description: "前後對比展現改變，引起模仿與渴望"
+    },
+    "專家背書法": {
+      framework: "SRT（Situation → Resistance → Takeaway）",
+      structure: "Situation → Resistance → Takeaway",
+      description: "專業角度破除迷思、建立權威感"
+    },
+    "場景展示法": {
+      framework: "TDC（Teaser → Demonstration → Conclusion）",
+      structure: "Teaser → Demonstration → Conclusion",
+      description: "展示產品場景，快速呈現賣點與轉化"
+    },
+    "數據支撐法": {
+      framework: "3C（Context → Conflict → Conclusion）",
+      structure: "Context → Conflict → Conclusion",
+      description: "以數據對比、結論支持觀點，提升公信力"
+    },
+    "對比展示法": {
+      framework: "FAB（Feature → Advantage → Benefit）",
+      structure: "Feature → Advantage → Benefit",
+      description: "清楚展示差異、優勢與利益點"
+    },
+    "互動促銷法": {
+      framework: "Hooks（Hook → Hold → Payoff）",
+      structure: "Hook → Hold → Payoff",
+      description: "強開場、快節奏、立即行動回饋"
+    },
+    "感情共鳴法": {
+      framework: "SCQA（Situation → Complication → Question → Answer）",
+      structure: "Situation → Complication → Question → Answer",
+      description: "感性鋪陳、共鳴情緒、故事帶入收尾"
+    }
+  };
 
   const contentDirections = [
     { value: "知識分享型", label: "知識分享型", emoji: "📚", desc: "教學干貨帖，輕鬆愛分享" },
@@ -46,6 +100,24 @@ export const ContentGenerator = () => {
 
   const handleKeywordSuggestionClick = (suggestion: string) => {
     setKeywords((prev) => prev ? `${prev}\n${suggestion}:` : `${suggestion}:`);
+  };
+
+  const handleCopyContent = async () => {
+    try {
+      await navigator.clipboard.writeText(generatedContent);
+      setIsCopied(true);
+      toast({
+        title: "複製成功！",
+        description: "內容已複製到剪貼板",
+      });
+      setTimeout(() => setIsCopied(false), 2000);
+    } catch (error) {
+      toast({
+        title: "複製失敗",
+        description: "無法複製內容，請手動選取複製",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleGenerate = async () => {
@@ -220,6 +292,22 @@ export const ContentGenerator = () => {
                 <SelectItem value="感情共鳴法">❤️ 感情共鳴法 | 以情感故事建立連結，引發共鳴</SelectItem>
               </SelectContent>
             </Select>
+            {frameworkInfo[framework] && (
+              <div className="mt-3 p-3 bg-primary/5 rounded-lg border border-primary/20 space-y-1.5">
+                <div className="text-sm">
+                  <span className="font-semibold text-primary">框架對應：</span>
+                  <span className="text-foreground">{frameworkInfo[framework].framework}</span>
+                </div>
+                <div className="text-sm">
+                  <span className="font-semibold text-primary">框架結構：</span>
+                  <span className="text-foreground">{frameworkInfo[framework].structure}</span>
+                </div>
+                <div className="text-sm">
+                  <span className="font-semibold text-primary">案例說明：</span>
+                  <span className="text-foreground">{frameworkInfo[framework].description}</span>
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="space-y-2">
@@ -301,9 +389,31 @@ export const ContentGenerator = () => {
       </Card>
 
       <Card className="p-6 bg-card/50 backdrop-blur-sm border-border/50">
-        <h2 className="text-2xl font-bold mb-6 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-          生成結果
-        </h2>
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+            生成結果
+          </h2>
+          {generatedContent && (
+            <Button
+              onClick={handleCopyContent}
+              variant="outline"
+              size="sm"
+              className="gap-2"
+            >
+              {isCopied ? (
+                <>
+                  <Check className="h-4 w-4" />
+                  已複製
+                </>
+              ) : (
+                <>
+                  <Copy className="h-4 w-4" />
+                  複製內容
+                </>
+              )}
+            </Button>
+          )}
+        </div>
         
         {generatedContent ? (
           <Textarea
