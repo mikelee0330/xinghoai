@@ -71,7 +71,7 @@ const Auth = () => {
     setLoading(true);
     const redirectUrl = `${window.location.origin}/`;
     
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -82,11 +82,26 @@ const Auth = () => {
     setLoading(false);
 
     if (error) {
-      toast({
-        title: t('signupFailed'),
-        description: error.message,
-        variant: "destructive",
-      });
+      // Check if user already exists
+      if (error.message.includes('already registered') || error.message.includes('User already registered')) {
+        const errorMessages = {
+          '繁體中文': '此 Email 已註冊，請直接登入或使用 Google 登入',
+          '简体中文': '此 Email 已注册，请直接登录或使用 Google 登录',
+          '日本語': 'このメールは既に登録されています。ログインするか、Google でログインしてください',
+          'English': 'This email is already registered. Please login or use Google Sign In'
+        };
+        toast({
+          title: t('signupFailed'),
+          description: errorMessages[language],
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: t('signupFailed'),
+          description: error.message,
+          variant: "destructive",
+        });
+      }
     } else {
       toast({
         title: t('success'),
@@ -166,18 +181,22 @@ const Auth = () => {
       provider: "google",
       options: {
         redirectTo: `${window.location.origin}/`,
+        queryParams: {
+          access_type: 'offline',
+          prompt: 'consent',
+        }
       },
     });
 
-    setLoading(false);
-
     if (error) {
+      setLoading(false);
       toast({
         title: t('loginFailed'),
         description: error.message,
         variant: "destructive",
       });
     }
+    // Note: Don't set loading to false here as user will be redirected to Google
   };
 
   if (showForgotPassword) {
