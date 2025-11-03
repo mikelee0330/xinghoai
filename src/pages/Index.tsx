@@ -12,7 +12,7 @@ import { NotificationBell } from "@/components/NotificationBell";
 import { CoinsDialog } from "@/components/CoinsDialog";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useTranslation } from "@/lib/i18n";
-import duckMascot from "@/assets/duck-mascot.png";
+import mascotCat from "@/assets/mascot-cat-new.png";
 
 const Index = () => {
   const [user, setUser] = useState(null);
@@ -123,7 +123,11 @@ const Index = () => {
           <div className="text-center mb-12">
             {/* Top Tag */}
             <div className="inline-block mb-6 animate-fade-in">
-              <span className="text-sm font-medium text-primary/80">{t('aiPlatformTag')}</span>
+              <div className="px-6 py-2 rounded-full bg-gradient-to-r from-purple-100 to-blue-100 dark:from-purple-900/30 dark:to-blue-900/30 border border-primary/20">
+                <span className="text-sm font-semibold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+                  {t('aiPlatformTag')}
+                </span>
+              </div>
             </div>
             
             {/* Main Title with Icon */}
@@ -182,7 +186,7 @@ const Index = () => {
           {/* Mascot positioned at bottom right */}
           <div className="fixed bottom-0 right-0 w-64 h-64 pointer-events-none z-50 animate-bounce" style={{ animationDuration: '3s' }}>
             <img 
-              src={duckMascot} 
+              src={mascotCat} 
               alt={t('mascotName')} 
               className="w-full h-full object-contain drop-shadow-2xl"
             />
