@@ -53,7 +53,7 @@ export const ContentGenerator = () => {
   const [isCopied, setIsCopied] = useState(false);
   const [history, setHistory] = useState<GenerationHistory[]>([]);
   const [brands, setBrands] = useState<BrandSetting[]>([]);
-  const [selectedBrandId, setSelectedBrandId] = useState<string>("");
+  const [selectedBrandId, setSelectedBrandId] = useState<string>("none");
   const { toast } = useToast();
 
   useEffect(() => {
@@ -228,7 +228,7 @@ export const ContentGenerator = () => {
         tone,
         framework,
         generated_content: content,
-        brand_id: selectedBrandId || null,
+        brand_id: selectedBrandId === "none" ? null : selectedBrandId,
       })
       .select()
       .single();
@@ -305,7 +305,7 @@ export const ContentGenerator = () => {
     try {
       // Get brand info if selected
       let brandInfo = null;
-      if (selectedBrandId) {
+      if (selectedBrandId && selectedBrandId !== "none") {
         const brand = brands.find(b => b.id === selectedBrandId);
         if (brand) {
           brandInfo = {
@@ -376,7 +376,7 @@ export const ContentGenerator = () => {
                   <SelectValue placeholder="選擇品牌或不指定" />
                 </SelectTrigger>
                 <SelectContent className="bg-popover z-50">
-                  <SelectItem value="">不指定品牌</SelectItem>
+                  <SelectItem value="none">不指定品牌</SelectItem>
                   {brands.map((brand) => (
                     <SelectItem key={brand.id} value={brand.id}>
                       <div className="flex items-center gap-2">
