@@ -28,6 +28,25 @@ interface Member {
   display_name: string;
   created_at: string;
   balance: number;
+  login_method: string;
+  status: string;
+  avatar_url: string | null;
+  last_login_at: string | null;
+}
+
+interface TransactionHistory {
+  id: string;
+  amount: number;
+  transaction_type: string;
+  description: string;
+  created_at: string;
+}
+
+interface GenerationHistory {
+  id: string;
+  content_type: string;
+  platform: string;
+  created_at: string;
 }
 
 export default function AdminMembers() {
@@ -36,6 +55,9 @@ export default function AdminMembers() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedMember, setSelectedMember] = useState<Member | null>(null);
   const [showHistory, setShowHistory] = useState(false);
+  const [transactionHistory, setTransactionHistory] = useState<TransactionHistory[]>([]);
+  const [generationHistory, setGenerationHistory] = useState<GenerationHistory[]>([]);
+  const [historyLoading, setHistoryLoading] = useState(false);
 
   useEffect(() => {
     loadMembers();
@@ -65,6 +87,10 @@ export default function AdminMembers() {
         display_name: profile.display_name || "未設定",
         created_at: profile.created_at,
         balance: coinsMap.get(profile.user_id) || 0,
+        login_method: profile.login_method || "未知",
+        status: profile.status || "active",
+        avatar_url: profile.avatar_url,
+        last_login_at: profile.last_login_at,
       })) || [];
 
       setMembers(membersWithCoins);
@@ -81,9 +107,73 @@ export default function AdminMembers() {
       member.display_name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleViewHistory = (member: Member) => {
+  const handleViewHistory = async (member: Member) => {
     setSelectedMember(member);
     setShowHistory(true);
+    setHistoryLoading(true);
+
+    try {
+      // Fetch transaction history
+      const { data: transactions } = await supabase
+        .from("coin_transactions")
+        .select("*")
+        .eq("user_id", member.id)
+        .order("created_at", { ascending: false })
+        .limit(10);
+
+      setTransactionHistory(transactions || []);
+
+      // Fetch generation history
+      const { data: generations } = await supabase
+        .from("generation_history")
+        .select("*")
+        .eq("user_id", member.id)
+        .order("created_at", { ascending: false })
+        .limit(10);
+
+      setGenerationHistory(generations || []);
+    } catch (error) {
+      console.error("Error loading history:", error);
+    } finally {
+      setHistoryLoading(false);
+    }
+  };
+
+  const handleToggleStatus = async (member: Member) => {
+    const newStatus = member.status === "active" ? "disabled" : "active";
+    
+    try {
+      const { error } = await supabase
+        .from("profiles")
+        .update({ status: newStatus })
+        .eq("user_id", member.id);
+
+      if (error) throw error;
+
+      // Reload members
+      await loadMembers();
+    } catch (error) {
+      console.error("Error toggling status:", error);
+    }
+  };
+
+  const getLoginMethodBadge = (method: string) => {
+    switch (method) {
+      case "google":
+        return <Badge variant="secondary">Google</Badge>;
+      case "email":
+        return <Badge variant="outline">Email</Badge>;
+      default:
+        return <Badge>未知</Badge>;
+    }
+  };
+
+  const getStatusBadge = (status: string) => {
+    return status === "active" ? (
+      <Badge variant="default" className="bg-green-600">啟用</Badge>
+    ) : (
+      <Badge variant="destructive">停用</Badge>
+    );
   };
 
   if (loading) {
@@ -126,9 +216,10 @@ export default function AdminMembers() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>郵箱</TableHead>
-                  <TableHead>暱稱</TableHead>
+                  <TableHead>會員</TableHead>
+                  <TableHead>登入方式</TableHead>
                   <TableHead>金幣餘額</TableHead>
+                  <TableHead>狀態</TableHead>
                   <TableHead>註冊時間</TableHead>
                   <TableHead className="text-right">操作</TableHead>
                 </TableRow>
@@ -136,26 +227,56 @@ export default function AdminMembers() {
               <TableBody>
                 {filteredMembers.map((member) => (
                   <TableRow key={member.id}>
-                    <TableCell className="font-medium">{member.email}</TableCell>
-                    <TableCell>{member.display_name}</TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-3">
+                        {member.avatar_url ? (
+                          <img 
+                            src={member.avatar_url} 
+                            alt={member.display_name}
+                            className="w-10 h-10 rounded-full"
+                          />
+                        ) : (
+                          <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                            <span className="text-sm font-medium">
+                              {member.display_name.charAt(0)}
+                            </span>
+                          </div>
+                        )}
+                        <div>
+                          <div className="font-medium">{member.display_name}</div>
+                          <div className="text-sm text-muted-foreground">{member.email}</div>
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell>{getLoginMethodBadge(member.login_method)}</TableCell>
                     <TableCell>
                       <div className="flex items-center gap-1">
                         <Coins className="h-4 w-4 text-yellow-600" />
                         <span>{member.balance}</span>
                       </div>
                     </TableCell>
+                    <TableCell>{getStatusBadge(member.status)}</TableCell>
                     <TableCell>
                       {format(new Date(member.created_at), "yyyy-MM-dd HH:mm")}
                     </TableCell>
                     <TableCell className="text-right">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleViewHistory(member)}
-                      >
-                        <History className="h-4 w-4 mr-1" />
-                        歷史記錄
-                      </Button>
+                      <div className="flex items-center justify-end gap-2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleViewHistory(member)}
+                        >
+                          <History className="h-4 w-4 mr-1" />
+                          查看詳情
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleToggleStatus(member)}
+                        >
+                          {member.status === "active" ? "停用" : "啟用"}
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -166,30 +287,137 @@ export default function AdminMembers() {
       </div>
 
       <Dialog open={showHistory} onOpenChange={setShowHistory}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
               會員詳情 - {selectedMember?.display_name}
             </DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <p className="text-sm text-muted-foreground">郵箱</p>
-                <p className="font-medium">{selectedMember?.email}</p>
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">金幣餘額</p>
-                <p className="font-medium flex items-center gap-1">
-                  <Coins className="h-4 w-4 text-yellow-600" />
-                  {selectedMember?.balance}
-                </p>
-              </div>
-            </div>
-            <div>
-              <p className="text-sm text-muted-foreground mb-2">生成歷史</p>
-              <p className="text-sm">功能開發中...</p>
-            </div>
+          <div className="space-y-6">
+            {/* 基本信息 */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">基本信息</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-sm text-muted-foreground">郵箱</p>
+                    <p className="font-medium">{selectedMember?.email}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">暱稱</p>
+                    <p className="font-medium">{selectedMember?.display_name}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">登入方式</p>
+                    <div className="mt-1">
+                      {selectedMember && getLoginMethodBadge(selectedMember.login_method)}
+                    </div>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">狀態</p>
+                    <div className="mt-1">
+                      {selectedMember && getStatusBadge(selectedMember.status)}
+                    </div>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">金幣餘額</p>
+                    <p className="font-medium flex items-center gap-1">
+                      <Coins className="h-4 w-4 text-yellow-600" />
+                      {selectedMember?.balance}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">註冊時間</p>
+                    <p className="font-medium">
+                      {selectedMember && format(new Date(selectedMember.created_at), "yyyy-MM-dd HH:mm")}
+                    </p>
+                  </div>
+                  {selectedMember?.last_login_at && (
+                    <div>
+                      <p className="text-sm text-muted-foreground">最後登入</p>
+                      <p className="font-medium">
+                        {format(new Date(selectedMember.last_login_at), "yyyy-MM-dd HH:mm")}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* 金幣交易記錄 */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">金幣交易記錄</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {historyLoading ? (
+                  <div className="flex justify-center py-4">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                  </div>
+                ) : transactionHistory.length > 0 ? (
+                  <div className="space-y-2">
+                    {transactionHistory.map((transaction) => (
+                      <div
+                        key={transaction.id}
+                        className="flex items-center justify-between p-3 border rounded-lg"
+                      >
+                        <div>
+                          <p className="font-medium">{transaction.description}</p>
+                          <p className="text-sm text-muted-foreground">
+                            {format(new Date(transaction.created_at), "yyyy-MM-dd HH:mm")}
+                          </p>
+                        </div>
+                        <div className={`font-medium ${transaction.amount > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                          {transaction.amount > 0 ? '+' : ''}{transaction.amount}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-sm text-muted-foreground text-center py-4">
+                    暫無交易記錄
+                  </p>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* 生成記錄 */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">生成記錄</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {historyLoading ? (
+                  <div className="flex justify-center py-4">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                  </div>
+                ) : generationHistory.length > 0 ? (
+                  <div className="space-y-2">
+                    {generationHistory.map((generation) => (
+                      <div
+                        key={generation.id}
+                        className="flex items-center justify-between p-3 border rounded-lg"
+                      >
+                        <div>
+                          <p className="font-medium">
+                            {generation.content_type} - {generation.platform}
+                          </p>
+                          <p className="text-sm text-muted-foreground">
+                            {format(new Date(generation.created_at), "yyyy-MM-dd HH:mm")}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-sm text-muted-foreground text-center py-4">
+                    暫無生成記錄
+                  </p>
+                )}
+              </CardContent>
+            </Card>
           </div>
         </DialogContent>
       </Dialog>
