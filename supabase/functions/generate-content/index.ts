@@ -50,7 +50,8 @@ serve(async (req) => {
       wordCount,
       videoLength,
       additionalRequirements,
-      brandInfo
+      brandInfo,
+      aiModel
     } = await req.json();
 
     // Input validation
@@ -83,11 +84,41 @@ serve(async (req) => {
     }
 
     // Check user's coin balance
-    const { data: userCoins, error: coinsError } = await supabase
+    let { data: userCoins, error: coinsError } = await supabase
       .from("user_coins")
       .select("balance")
       .eq("user_id", user.id)
-      .single();
+      .maybeSingle();
+
+    // If user doesn't have a coin record, create one with initial balance
+    if (!userCoins && !coinsError) {
+      console.log("Creating initial coin record for user:", user.id);
+      const { data: newCoins, error: insertError } = await supabase
+        .from("user_coins")
+        .insert({ user_id: user.id, balance: 50 })
+        .select("balance")
+        .single();
+      
+      if (insertError) {
+        console.error("Error creating user coins:", insertError);
+        return new Response(
+          JSON.stringify({ error: "無法創建代幣帳戶" }),
+          { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+      
+      // Record signup bonus transaction
+      await supabase
+        .from("coin_transactions")
+        .insert({
+          user_id: user.id,
+          amount: 50,
+          transaction_type: "signup_bonus",
+          description: "新用戶註冊獎勵",
+        });
+      
+      userCoins = newCoins;
+    }
 
     if (coinsError) {
       console.error("Error fetching user coins:", coinsError);
@@ -184,6 +215,10 @@ ${additionalRequirements ? `補充要求：\n${additionalRequirements}` : ""}
 
 請根據以上資訊，創作一篇${contentType}。`;
 
+    // Use the selected AI model or default to gemini-2.5-flash
+    const selectedModel = aiModel || "google/gemini-2.5-flash";
+    console.log("Using AI model:", selectedModel);
+
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -191,7 +226,7 @@ ${additionalRequirements ? `補充要求：\n${additionalRequirements}` : ""}
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-2.5-flash",
+        model: selectedModel,
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: userPrompt }
