@@ -14,6 +14,106 @@ export type Database = {
   }
   public: {
     Tables: {
+      agent_quota_transactions: {
+        Row: {
+          agent_id: string
+          amount: number
+          created_at: string
+          created_by: string
+          description: string
+          id: string
+          target_user_id: string | null
+          transaction_type: Database["public"]["Enums"]["quota_transaction_type"]
+        }
+        Insert: {
+          agent_id: string
+          amount: number
+          created_at?: string
+          created_by: string
+          description: string
+          id?: string
+          target_user_id?: string | null
+          transaction_type: Database["public"]["Enums"]["quota_transaction_type"]
+        }
+        Update: {
+          agent_id?: string
+          amount?: number
+          created_at?: string
+          created_by?: string
+          description?: string
+          id?: string
+          target_user_id?: string | null
+          transaction_type?: Database["public"]["Enums"]["quota_transaction_type"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_quota_transactions_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      agents: {
+        Row: {
+          agent_code: string
+          agent_name: string
+          commission_rate: number
+          contact_email: string | null
+          contact_person: string | null
+          contact_phone: string | null
+          created_at: string
+          id: string
+          level: number
+          parent_agent_id: string | null
+          quota_balance: number
+          status: Database["public"]["Enums"]["agent_status"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          agent_code: string
+          agent_name: string
+          commission_rate?: number
+          contact_email?: string | null
+          contact_person?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          id?: string
+          level?: number
+          parent_agent_id?: string | null
+          quota_balance?: number
+          status?: Database["public"]["Enums"]["agent_status"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          agent_code?: string
+          agent_name?: string
+          commission_rate?: number
+          contact_email?: string | null
+          contact_person?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          id?: string
+          level?: number
+          parent_agent_id?: string | null
+          quota_balance?: number
+          status?: Database["public"]["Enums"]["agent_status"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agents_parent_agent_id_fkey"
+            columns: ["parent_agent_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       brand_settings: {
         Row: {
           additional_notes: string | null
@@ -58,30 +158,57 @@ export type Database = {
       }
       coin_transactions: {
         Row: {
+          agent_id: string | null
           amount: number
           created_at: string
           description: string
           id: string
+          referral_id: string | null
+          source_description: string | null
+          source_type: string | null
           transaction_type: string
           user_id: string
         }
         Insert: {
+          agent_id?: string | null
           amount: number
           created_at?: string
           description: string
           id?: string
+          referral_id?: string | null
+          source_description?: string | null
+          source_type?: string | null
           transaction_type: string
           user_id: string
         }
         Update: {
+          agent_id?: string | null
           amount?: number
           created_at?: string
           description?: string
           id?: string
+          referral_id?: string | null
+          source_description?: string | null
+          source_type?: string | null
           transaction_type?: string
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "coin_transactions_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "coin_transactions_referral_id_fkey"
+            columns: ["referral_id"]
+            isOneToOne: false
+            referencedRelation: "referrals"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       daily_checkins: {
         Row: {
@@ -217,6 +344,63 @@ export type Database = {
         }
         Relationships: []
       }
+      referral_settings: {
+        Row: {
+          created_at: string
+          id: string
+          is_active: boolean
+          referee_reward: number
+          referrer_reward: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          referee_reward?: number
+          referrer_reward?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          referee_reward?: number
+          referrer_reward?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      referrals: {
+        Row: {
+          created_at: string
+          id: string
+          referee_id: string
+          referral_code: string
+          referrer_id: string
+          reward_given: boolean
+          status: Database["public"]["Enums"]["referral_status"]
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          referee_id: string
+          referral_code: string
+          referrer_id: string
+          reward_given?: boolean
+          status?: Database["public"]["Enums"]["referral_status"]
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          referee_id?: string
+          referral_code?: string
+          referrer_id?: string
+          reward_given?: boolean
+          status?: Database["public"]["Enums"]["referral_status"]
+        }
+        Relationships: []
+      }
       user_coins: {
         Row: {
           balance: number
@@ -241,15 +425,55 @@ export type Database = {
         }
         Relationships: []
       }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      is_admin: { Args: { _user_id: string }; Returns: boolean }
     }
     Enums: {
-      [_ in never]: never
+      agent_status: "active" | "suspended" | "inactive"
+      app_role:
+        | "super_admin"
+        | "operations"
+        | "customer_service"
+        | "agent"
+        | "user"
+      quota_transaction_type:
+        | "purchase"
+        | "allocation"
+        | "refund"
+        | "adjustment"
+      referral_status: "pending" | "completed" | "expired"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -376,6 +600,22 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      agent_status: ["active", "suspended", "inactive"],
+      app_role: [
+        "super_admin",
+        "operations",
+        "customer_service",
+        "agent",
+        "user",
+      ],
+      quota_transaction_type: [
+        "purchase",
+        "allocation",
+        "refund",
+        "adjustment",
+      ],
+      referral_status: ["pending", "completed", "expired"],
+    },
   },
 } as const
