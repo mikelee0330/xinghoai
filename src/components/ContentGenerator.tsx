@@ -58,7 +58,6 @@ export const ContentGenerator = () => {
   const [wordCount, setWordCount] = useState("300字內");
   const [videoLength, setVideoLength] = useState("50~75字(10~15s)");
   const [additionalRequirements, setAdditionalRequirements] = useState("");
-  const [aiModel, setAiModel] = useState("google/gemini-2.5-flash");
 
   // Platform icon mapping
   const platformIcons: Record<string, React.ReactNode> = {
@@ -390,7 +389,6 @@ export const ContentGenerator = () => {
           videoLength: contentType === "腳本口播" ? videoLength : undefined,
           additionalRequirements,
           brandInfo,
-          aiModel,
         },
       });
 
@@ -456,53 +454,6 @@ export const ContentGenerator = () => {
                       </div>
                     </SelectItem>
                   ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="aiModel">AI 模型</Label>
-              <Select value={aiModel} onValueChange={setAiModel}>
-                <SelectTrigger id="aiModel" className="bg-background/50">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent className="bg-popover z-50">
-                  <SelectItem value="google/gemini-2.5-flash">
-                    <div className="flex flex-col gap-0.5">
-                      <span className="font-medium">Gemini 2.5 Flash</span>
-                      <span className="text-xs text-muted-foreground">平衡速度與品質（預設）</span>
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="google/gemini-2.5-pro">
-                    <div className="flex flex-col gap-0.5">
-                      <span className="font-medium">Gemini 2.5 Pro</span>
-                      <span className="text-xs text-muted-foreground">最高品質，複雜推理</span>
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="google/gemini-2.5-flash-lite">
-                    <div className="flex flex-col gap-0.5">
-                      <span className="font-medium">Gemini 2.5 Flash Lite</span>
-                      <span className="text-xs text-muted-foreground">最快速度，簡單任務</span>
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="openai/gpt-5">
-                    <div className="flex flex-col gap-0.5">
-                      <span className="font-medium">GPT-5</span>
-                      <span className="text-xs text-muted-foreground">強大推理能力</span>
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="openai/gpt-5-mini">
-                    <div className="flex flex-col gap-0.5">
-                      <span className="font-medium">GPT-5 Mini</span>
-                      <span className="text-xs text-muted-foreground">高效能，較低成本</span>
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="openai/gpt-5-nano">
-                    <div className="flex flex-col gap-0.5">
-                      <span className="font-medium">GPT-5 Nano</span>
-                      <span className="text-xs text-muted-foreground">極速處理，大量請求</span>
-                    </div>
-                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>

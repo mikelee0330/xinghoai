@@ -50,8 +50,7 @@ serve(async (req) => {
       wordCount,
       videoLength,
       additionalRequirements,
-      brandInfo,
-      aiModel
+      brandInfo
     } = await req.json();
 
     // Input validation
@@ -215,8 +214,8 @@ ${additionalRequirements ? `補充要求：\n${additionalRequirements}` : ""}
 
 請根據以上資訊，創作一篇${contentType}。`;
 
-    // Use the selected AI model or default to gemini-2.5-flash
-    const selectedModel = aiModel || "google/gemini-2.5-flash";
+    // Fixed AI model for all users
+    const selectedModel = "openai/gpt-5-nano";
     console.log("Using AI model:", selectedModel);
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
