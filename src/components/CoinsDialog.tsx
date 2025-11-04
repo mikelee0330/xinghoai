@@ -39,24 +39,40 @@ export const CoinsDialog = ({ userId }: CoinsDialogProps) => {
   const [canCheckIn, setCanCheckIn] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
+  // Load balance on mount and when userId changes
+  useEffect(() => {
+    loadBalance();
+  }, [userId]);
+
+  // Load full data when dialog opens
   useEffect(() => {
     if (isOpen) {
       loadCoinsData();
     }
-  }, [userId, isOpen]);
+  }, [isOpen]);
+
+  const loadBalance = async () => {
+    try {
+      const { data: coinsData } = await supabase
+        .from('user_coins')
+        .select('balance')
+        .eq('user_id', userId)
+        .maybeSingle();
+      
+      if (coinsData) {
+        setBalance(coinsData.balance);
+      }
+    } catch (error: any) {
+      console.error('Error loading balance:', error);
+    }
+  };
 
   const loadCoinsData = async () => {
     try {
       setLoading(true);
       
-      // Load balance
-      const { data: coinsData } = await supabase
-        .from('user_coins')
-        .select('balance')
-        .eq('user_id', userId)
-        .single();
-      
-      if (coinsData) setBalance(coinsData.balance);
+      // Reload balance
+      await loadBalance();
 
       // Load check-in history
       const { data: checkInData } = await supabase
