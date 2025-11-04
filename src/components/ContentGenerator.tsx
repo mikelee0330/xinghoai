@@ -553,31 +553,31 @@ export const ContentGenerator = () => {
               </div>
             )}
 
-            <div className="space-y-2">
-              <Label className="text-sm">{t('contentDirection')}</Label>
-              <div className="grid grid-cols-2 gap-2">
-                {contentDirections.map((direction) => (
-                  <button
-                    key={direction.value}
-                    type="button"
-                    onClick={() => setContentDirection(direction.value)}
-                    className={`p-2.5 rounded-lg border transition-all text-left ${
-                      contentDirection === direction.value
-                        ? "border-primary bg-primary/10 shadow-sm"
-                        : "border-border/50 hover:border-primary/50 hover:bg-accent/50"
-                    }`}
-                  >
-                    <div className="flex items-center gap-2">
-                      <span className="text-lg">{direction.emoji}</span>
-                      <div className="flex-1 min-w-0">
-                        <div className="font-semibold text-xs truncate">{direction.label}</div>
-                        <div className="text-[10px] text-muted-foreground leading-tight">{direction.desc}</div>
-                      </div>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </div>
+        <div className="space-y-3">
+          <Label>{t('contentDirection')}</Label>
+          <div className="grid grid-cols-2 gap-3">
+            {contentDirections.map((direction) => (
+              <button
+                key={direction.value}
+                type="button"
+                onClick={() => setContentDirection(direction.value)}
+                className={`p-4 rounded-lg border-2 transition-all text-left ${
+                  contentDirection === direction.value
+                    ? "border-primary bg-primary/10 shadow-sm"
+                    : "border-border hover:border-primary/50 hover:bg-accent/50"
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <span className="text-3xl">{direction.emoji}</span>
+                  <div className="flex-1">
+                    <div className="font-semibold text-sm mb-0.5">{direction.label}</div>
+                    <div className="text-xs text-muted-foreground">{direction.desc}</div>
+                  </div>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
 
             <div className="space-y-2">
               <Label htmlFor="framework">文案輸出架構</Label>
