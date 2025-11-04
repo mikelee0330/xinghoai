@@ -5,7 +5,10 @@ import {
   Users, 
   FileText, 
   LogOut,
-  Sparkles
+  Sparkles,
+  Settings,
+  Coins,
+  Bell
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
@@ -30,6 +33,10 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
     { path: "/admin", icon: LayoutDashboard, label: "儀表板" },
     { path: "/admin/members", icon: Users, label: "會員管理" },
     { path: "/admin/content-monitor", icon: FileText, label: "內容監控" },
+    { path: "/admin/ai-settings", icon: Settings, label: "AI設置" },
+    { path: "/admin/coins", icon: Coins, label: "金幣管理" },
+    { path: "/admin/referrals", icon: Users, label: "推薦系統" },
+    { path: "/admin/notifications", icon: Bell, label: "通知管理" },
   ];
 
   if (loading) {
